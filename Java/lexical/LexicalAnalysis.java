@@ -47,12 +47,31 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.token += (char) c;
                         state = 13;
                     }
-                    // fix statements
-                    if(c == ';' || c == ',' || c == '+' || c == '*' || c == '/' || c == '%' ||
+                    else if(c == ';' || c == ',' || c == '+' || c == '*' || c == '/' || c == '%' ||
                        c == '#' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || 
                        c == '}'){
                         lex.token += (char) c;
                         state = 17;
+                    }
+                    else if(c == ' ' || c == '\r' || c == '\t' ){
+                        state = 1;
+                    }
+                    else if( c == '\n'){
+                        state = 1;
+                        line++;
+                    }
+                    else if (c == '~'){
+                        lex.token += (char) c;
+                        state = 11;
+                    }
+                    else if (c == -1){
+                        lex.type = TokenType.END_OF_FILE;
+                        state = 18;
+                    }
+                    else {
+                        lex.token += (char) c;
+                        state = 18;
+                        lex.type = TokenType.INVALID_TOKEN; 
                     }
                     break;
                 case 2:
@@ -84,6 +103,14 @@ public class LexicalAnalysis implements AutoCloseable {
                     break;
                 case 11:
                     // TODO: Implement me!
+                    if (c == '='){
+                        lex.token += (char) c;
+                        state = 17;
+                    }
+                    else{
+                        state = 18;
+                        lex.type = TokenType.INVALID_TOKEN;
+                    }
                     break;
                 case 12:
                     // TODO: Implement me!
