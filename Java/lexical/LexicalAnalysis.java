@@ -43,6 +43,17 @@ public class LexicalAnalysis implements AutoCloseable {
             switch (state) {
                 case 1:
                     // TODO: Implement me!
+                    if(Character.isLetter(c)){
+                        lex.token += (char) c;
+                        state = 13;
+                    }
+                    // fix statements
+                    if(c == ';' || c == ',' || c == '+' || c == '*' || c == '/' || c == '%' ||
+                       c == '#' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || 
+                       c == '}'){
+                        lex.token += (char) c;
+                        state = 17;
+                    }
                     break;
                 case 2:
                     // TODO: Implement me!
@@ -78,6 +89,14 @@ public class LexicalAnalysis implements AutoCloseable {
                     // TODO: Implement me!
                     break;
                 case 13:
+                    if(c == '_' || Character.isLetter(c) || Character.isDigit(c)){
+                        lex.token += (char) c;
+                        state = 13;
+                    }
+                    else{
+                        ungetc(c);
+                        state = 17;
+                    }
                     // TODO: Implement me!
                     break;
                 case 14:
