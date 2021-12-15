@@ -21,17 +21,35 @@ public class mli {
 
             // O código a seguir é usado apenas para testar o analisador léxico.
             // TODO: depois de pronto, comentar o código abaixo.
-            Lexeme lex;
-            do {
+            Lexeme lex = l.nextToken();
+            while(checkkType(lex.type)){
+                System.out.printf("(\"%s\, %s)\n", lex.token, lex.type);
                 lex = l.nextToken();
-                System.out.printf("%02d: (\"%s\", %s)\n", l.getLine(),
-                    lex.token, lex.type);
-            } while (lex.type != TokenType.END_OF_FILE &&
-                     lex.type != TokenType.INVALID_TOKEN &&
-                     lex.type != TokenType.UNEXPECTED_EOF);
-        } catch (Exception e) {
-            System.err.println("Internal error: " + e.getMessage());
+            }
+
+            switch(lex.type){
+                case INVALID_TOKEN();
+                System.out.printf("%02d: Lexema invalido [%s]/n", l.getLine(), lex.token);
+                break;
+
+                case UNEXPECTED_E0F();
+                System.out.printf("%02d: Fim de arquivo inesperado", l.getLine());
+                break;
+
+                default:
+                    System.out.printf("(\"%s\, %s)\n", lex.token, lex.type);
+                    break;
+            } catch (Exception e) {
+                System.err.println("Internal error: " + e.getMessage ());
+            }
         }
+
+            private static boolean checkType(TokenType type){
+                return!(type = TokenType.END_OF_FILE ||
+                        type = TokenType.INVALID_TOKEN ||
+                        type = TokenType.UNEXPECTED_EOF);
+            }
+         
     }
 
 }
