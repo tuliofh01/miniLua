@@ -112,6 +112,11 @@ public class LexicalAnalysis implements AutoCloseable {
                         state = 1;
                         lex.token = ""
                     }
+                    else if (c == -1){
+                        lex.token = '';
+                        lex.type = TokenType.END_OF_FILE;
+                        state = 18;
+                    }
                     else {
                         state = 9;
                         lex.token += (char) c;
@@ -122,6 +127,11 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.token += (char) c;
                         state = 5;
                     }
+                    else if (c == -1){
+                        lex.token = '';
+                        lex.type = TokenType.END_OF_FILE;
+                        state = 18;
+                    }
                     else {
                         state = 1;
                         lex.token = ""
@@ -129,20 +139,45 @@ public class LexicalAnalysis implements AutoCloseable {
                     break;
                 case 5:
                     // TODO: Implement me!
+                    else if (c == -1){
+                        lex.token = '';
+                        lex.type = TokenType.UNEXPECTED_EOF;
+                        state = 18;
+                    }
                     break;
                 case 6:
                     // TODO: Implement me!
+                    else if (c == -1){
+                        lex.token = '';
+                        lex.type = TokenType.UNEXPECTED_EOF;
+                        state = 18;
+                    }
                     break;
                 case 7:
                     // TODO: Implement me!
+                    else if (c == -1){
+                        lex.token = '';
+                        lex.type = TokenType.UNEXPECTED_EOF;
+                        state = 18;
+                    }
                     break;
                 case 8:
                     // TODO: Implement me!
+                    else if (c == -1){
+                        lex.token = '';
+                        lex.type = TokenType.UNEXPECTED_EOF;
+                        state = 18;
+                    }
                     break;
                 case 9:
                     if (c == '\n'){
                         state = 1;
                         lex.token = ""
+                    }
+                    else if (c == -1){
+                        lex.token = '';
+                        lex.type = TokenType.END_OF_FILE;
+                        state = 18;
                     }
                     else {
                         lex.token += (char) c;
