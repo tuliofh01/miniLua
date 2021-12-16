@@ -42,7 +42,6 @@ public class LexicalAnalysis implements AutoCloseable {
 
             switch (state) {
                 case 1:
-                    // TODO: Implement me!
                     if(Character.isLetter(c)){
                         lex.token += (char) c;
                         state = 13;
@@ -67,6 +66,18 @@ public class LexicalAnalysis implements AutoCloseable {
                     else if (c == '~'){
                         lex.token += (char) c;
                         state = 11;
+                    }
+                    else if (c == '=' || c == '>' || c == '<'){
+                        lex.token += (char) c;
+                        state = 10;
+                    }
+                    else if (c == '.'){
+                        lex.token += (char) c;
+                        state == 12;
+                    }
+                    else if (c == '"'){
+                        lex.token += (char) c;
+                        state = 14;
                     }
                     else if (c == -1){
                         lex.type = TokenType.END_OF_FILE;
@@ -103,21 +114,35 @@ public class LexicalAnalysis implements AutoCloseable {
                     // TODO: Implement me!
                     break;
                 case 10:
-                    // TODO: Implement me!
+                    if (c == '='){
+                        lex.token += (char) c;
+                        state = 17;
+                    }
+                    else {
+                        ungetc(c)
+                        state = 17;
+                    }
                     break;
                 case 11:
-                    // TODO: Implement me!
                     if (c == '='){
                         lex.token += (char) c;
                         state = 17;
                     }
                     else{
+                        ungetc(c);
                         state = 18;
                         lex.type = TokenType.INVALID_TOKEN;
                     }
                     break;
                 case 12:
-                    // TODO: Implement me!
+                    if (c == '.'){
+                        lex.token += (char) c;
+                        state = 17;
+                    }
+                    else {
+                        ungetc(c);
+                        state = 17;
+                    }
                     break;
                 case 13:
                     if(c == '_' || Character.isLetter(c) || Character.isDigit(c)){
@@ -128,13 +153,18 @@ public class LexicalAnalysis implements AutoCloseable {
                         ungetc(c);
                         state = 17;
                     }
-                    // TODO: Implement me!
                     break;
                 case 14:
-                    // TODO: Implement me!
+                    if (c == '"'){
+                        lex.token += (char) c;
+                        state = 18;
+                    }
+                    else {
+                        lex.token += (char) c;
+                        state = 14;
+                    }
                     break;
                 case 15:
-                    // TODO: Implement me!
                     if(c == '.'){
                         lex.token += (char) c;
                         state = 16;
@@ -159,7 +189,6 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.type = TokenType.NUMBER;
                         state = 18;
                     }
-                    // TODO: Implement me!
                     break;
                 default:
                     throw new LexicalException("Unreachable");
