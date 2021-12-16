@@ -50,6 +50,10 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.token += (char) c;
                         state = 15;
                     }
+                    else if (c == '-'){
+                        lex.token += (char) c;
+                        state = 2;
+                    }
                     else if(c == ';' || c == ',' || c == '+' || c == '*' || c == '/' || c == '%' ||
                        c == '#' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || 
                        c == '}'){
@@ -90,13 +94,38 @@ public class LexicalAnalysis implements AutoCloseable {
                     }
                     break;
                 case 2:
-                    // TODO: Implement me!
+                    if (c == '-'){
+                        lex.token += (char) c;
+                        state = 3;
+                    }
+                    else {
+                        ungetc(c);
+                        state = 17;
+                    }
                     break;
                 case 3:
-                    // TODO: Implement me!
+                    if (c == '['){
+                        lex.token += (char) c;
+                        state = 4;
+                    }
+                    else if (c = '\n'){
+                        state = 1;
+                        lex.token = ""
+                    }
+                    else {
+                        state = 9;
+                        lex.token += (char) c;
+                    }
                     break;
                 case 4:
-                    // TODO: Implement me!
+                    if (c == '['){
+                        lex.token += (char) c;
+                        state = 5;
+                    }
+                    else {
+                        state = 1;
+                        lex.token = ""
+                    }
                     break;
                 case 5:
                     // TODO: Implement me!
@@ -111,7 +140,14 @@ public class LexicalAnalysis implements AutoCloseable {
                     // TODO: Implement me!
                     break;
                 case 9:
-                    // TODO: Implement me!
+                    if (c == '\n'){
+                        state = 1;
+                        lex.token = ""
+                    }
+                    else {
+                        lex.token += (char) c;
+                        state = 9;
+                    }
                     break;
                 case 10:
                     if (c == '='){
