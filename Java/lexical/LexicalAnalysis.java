@@ -47,6 +47,10 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.token += (char) c;
                         state = 13;
                     }
+                    else if(Character.isDigit(c)){
+                        lex.token += (char) c;
+                        state = 15;
+                    }
                     else if(c == ';' || c == ',' || c == '+' || c == '*' || c == '/' || c == '%' ||
                        c == '#' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || 
                        c == '}'){
@@ -131,8 +135,30 @@ public class LexicalAnalysis implements AutoCloseable {
                     break;
                 case 15:
                     // TODO: Implement me!
+                    if(c == '.'){
+                        lex.token += (char) c;
+                        state = 16;
+                    }
+                    else if(Character.isDigit(c)){
+                        lex.token += (char) c;
+                        state = 15;
+                    }
+                    else{
+                        ungetc(c);
+                        lex.type = TokenType.NUMBER;
+                        state = 18;
+                    }
                     break;
                 case 16:
+                    if(Character.isDigit(c)){
+                        lex.token += (char) c;
+                        state = 16;
+                    }
+                    else{
+                        ungetc(c);
+                        lex.type = TokenType.NUMBER;
+                        state = 18;
+                    }
                     // TODO: Implement me!
                     break;
                 default:
