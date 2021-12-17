@@ -42,7 +42,7 @@ public class LexicalAnalysis implements AutoCloseable {
 
             switch (state) {
                 case 1:
-                    if(Character.isLetter(c)){
+                    if(Character.isLetter(c) || '_'){
                         lex.token += (char) c;
                         state = 13;
                     }
@@ -132,41 +132,78 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.type = TokenType.END_OF_FILE;
                         state = 18;
                     }
-                    else {
+                    else if (c == '\n') {
                         state = 1;
                         lex.token = ""
                     }
+                    else {
+                        state = 9;
+                        lex.token += (char) c;
+                    }
                     break;
                 case 5:
-                    // TODO: Implement me!
+                    if (c == '-'){
+                        state = 6;
+                        lex.token += (char) c;
+                    }
                     else if (c == -1){
                         lex.token = '';
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
+                    }
+                    else {
+                        state = 5;
+                        lex.token += (char) c;
                     }
                     break;
                 case 6:
-                    // TODO: Implement me!
+                    if (c == '-'){
+                        state = 7;
+                        lex.token += (char) c;
+                    }
                     else if (c == -1){
                         lex.token = '';
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
                     }
+                    else {
+                        state = 5;
+                        lex.token += (char) c;
+                    }
                     break;
                 case 7:
-                    // TODO: Implement me!
+                    if (c == ']'){
+                        state = 8;
+                        lex.token += (char) c;
+                    }
                     else if (c == -1){
                         lex.token = '';
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
+                    }
+                    else {
+                        state = 5;
+                        lex.token += (char) c;
                     }
                     break;
                 case 8:
                     // TODO: Implement me!
+                    if (c == ']'){
+                        state = 1;
+                        lex.token = ""
+                    }
                     else if (c == -1){
                         lex.token = '';
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
+                    }
+                    else if (c == '-'){
+                        state = 6;
+                        lex.token = += (char) c;
+                    }
+                    else{
+                        state = 5;
+                        lex.token += (char) c;
                     }
                     break;
                 case 9:
