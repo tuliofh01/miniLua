@@ -187,7 +187,6 @@ public class LexicalAnalysis implements AutoCloseable {
                     }
                     break;
                 case 8:
-                    // TODO: Implement me!
                     if (c == ']'){
                         state = 1;
                         lex.token = ""
