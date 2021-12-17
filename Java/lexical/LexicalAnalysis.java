@@ -42,7 +42,7 @@ public class LexicalAnalysis implements AutoCloseable {
 
             switch (state) {
                 case 1:
-                    if(Character.isLetter(c) || '_'){
+                    if(Character.isLetter(c) || c == '_'){
                         lex.token += (char) c;
                         state = 13;
                     }
@@ -77,7 +77,7 @@ public class LexicalAnalysis implements AutoCloseable {
                     }
                     else if (c == '.'){
                         lex.token += (char) c;
-                        state == 12;
+                        state = 12;
                     }
                     else if (c == '"'){
                         lex.token += (char) c;
@@ -108,12 +108,12 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.token += (char) c;
                         state = 4;
                     }
-                    else if (c = '\n'){
+                    else if (c == '\n'){
                         state = 1;
-                        lex.token = ""
+                        lex.token = "";
                     }
                     else if (c == -1){
-                        lex.token = '';
+                        lex.token = "";
                         lex.type = TokenType.END_OF_FILE;
                         state = 18;
                     }
@@ -128,13 +128,13 @@ public class LexicalAnalysis implements AutoCloseable {
                         state = 5;
                     }
                     else if (c == -1){
-                        lex.token = '';
+                        lex.token = "";
                         lex.type = TokenType.END_OF_FILE;
                         state = 18;
                     }
                     else if (c == '\n') {
                         state = 1;
-                        lex.token = ""
+                        lex.token = "";
                     }
                     else {
                         state = 9;
@@ -147,7 +147,7 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.token += (char) c;
                     }
                     else if (c == -1){
-                        lex.token = '';
+                        lex.token = "";
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
                     }
@@ -162,7 +162,7 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.token += (char) c;
                     }
                     else if (c == -1){
-                        lex.token = '';
+                        lex.token = "";
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
                     }
@@ -177,7 +177,7 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.token += (char) c;
                     }
                     else if (c == -1){
-                        lex.token = '';
+                        lex.token = "";
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
                     }
@@ -192,13 +192,13 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.token = ""
                     }
                     else if (c == -1){
-                        lex.token = '';
+                        lex.token = "";
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
                     }
                     else if (c == '-'){
                         state = 6;
-                        lex.token = += (char) c;
+                        lex.token += (char) c;
                     }
                     else{
                         state = 5;
@@ -208,10 +208,10 @@ public class LexicalAnalysis implements AutoCloseable {
                 case 9:
                     if (c == '\n'){
                         state = 1;
-                        lex.token = ""
+                        lex.token = "";
                     }
                     else if (c == -1){
-                        lex.token = '';
+                        lex.token = "";
                         lex.type = TokenType.END_OF_FILE;
                         state = 18;
                     }
@@ -266,6 +266,11 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.token += (char) c;
                         state = 18;
                     }
+                    else if (c == -1){
+                        lex.token = "";
+                        lex.type = TokenType.UNEXPECTED_EOF;
+                        state = 18;
+                    }
                     else {
                         lex.token += (char) c;
                         state = 14;
@@ -291,6 +296,7 @@ public class LexicalAnalysis implements AutoCloseable {
                         lex.token += (char) c;
                         state = 16;
                     }
+                    
                     else{
                         ungetc(c);
                         lex.type = TokenType.NUMBER;
