@@ -38,266 +38,230 @@ public class LexicalAnalysis implements AutoCloseable {
         int state = 1;
         while (state != 17 && state != 18) {
             int c = getc();
-            // System.out.printf("  [%02d, %03d ('%c')]\n", state, c, (char) c);
+            // System.out.printf(" [%02d, %03d ('%c')]\n", state, c, (char) c);
 
             switch (state) {
                 case 1:
-                    if(Character.isLetter(c) || c == '_'){
+                    if (Character.isLetter(c) || c == '_') {
                         lex.token += (char) c;
                         state = 13;
-                    }
-                    else if(Character.isDigit(c)){
+                    } else if (Character.isDigit(c)) {
                         lex.token += (char) c;
                         state = 15;
-                    }
-                    else if (c == '-'){
+                    } else if (c == '-') {
                         lex.token += (char) c;
                         state = 2;
-                    }
-                    else if(c == ';' || c == ',' || c == '+' || c == '*' || c == '/' || c == '%' ||
-                       c == '#' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || 
-                       c == '}'){
+                    } else if (c == ';' || c == ',' || c == '+' || c == '*' || c == '/' || c == '%' ||
+                            c == '#' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' ||
+                            c == '}') {
                         lex.token += (char) c;
                         state = 17;
-                    }
-                    else if(c == ' ' || c == '\r' || c == '\t' ){
+                    } else if (c == ' ' || c == '\r' || c == '\t') {
                         state = 1;
-                    }
-                    else if( c == '\n'){
+                    } else if (c == '\n') {
                         state = 1;
                         line++;
-                    }
-                    else if (c == '~'){
+                    } else if (c == '~') {
                         lex.token += (char) c;
                         state = 11;
-                    }
-                    else if (c == '=' || c == '>' || c == '<'){
+                    } else if (c == '=' || c == '>' || c == '<') {
                         lex.token += (char) c;
                         state = 10;
-                    }
-                    else if (c == '.'){
+                    } else if (c == '.') {
                         lex.token += (char) c;
                         state = 12;
-                    }
-                    else if (c == '"'){
-                        lex.token += (char) c;
+                    } else if (c == '"') {
+                        // lex.token += (char) c;
                         state = 14;
-                    }
-                    else if (c == -1){
+                    } else if (c == -1) {
                         lex.type = TokenType.END_OF_FILE;
                         state = 18;
-                    }
-                    else {
+                    } else {
                         lex.token += (char) c;
                         state = 18;
-                        lex.type = TokenType.INVALID_TOKEN; 
+                        lex.type = TokenType.INVALID_TOKEN;
                     }
                     break;
                 case 2:
-                    if (c == '-'){
+                    if (c == '-') {
                         lex.token += (char) c;
                         state = 3;
-                    }
-                    else {
+                    } else {
                         ungetc(c);
                         state = 17;
                     }
                     break;
                 case 3:
-                    if (c == '['){
+                    if (c == '[') {
                         lex.token += (char) c;
                         state = 4;
-                    }
-                    else if (c == '\n'){
+                    } else if (c == '\n') {
                         state = 1;
                         lex.token = "";
-                    }
-                    else if (c == -1){
+                    } else if (c == -1) {
                         lex.token = "";
                         lex.type = TokenType.END_OF_FILE;
                         state = 18;
-                    }
-                    else {
+                    } else {
                         state = 9;
                         lex.token += (char) c;
                     }
                     break;
                 case 4:
-                    if (c == '['){
+                    if (c == '[') {
                         lex.token += (char) c;
                         state = 5;
-                    }
-                    else if (c == -1){
+                    } else if (c == -1) {
                         lex.token = "";
                         lex.type = TokenType.END_OF_FILE;
                         state = 18;
-                    }
-                    else if (c == '\n') {
+                    } else if (c == '\n') {
                         state = 1;
                         lex.token = "";
-                    }
-                    else {
+                    } else {
                         state = 9;
                         lex.token += (char) c;
                     }
                     break;
                 case 5:
-                    if (c == '-'){
+                    if (c == '-') {
                         state = 6;
                         lex.token += (char) c;
-                    }
-                    else if (c == -1){
+                    } else if (c == -1) {
                         lex.token = "";
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
-                    }
-                    else {
+                    } else {
                         state = 5;
                         lex.token += (char) c;
                     }
                     break;
                 case 6:
-                    if (c == '-'){
+                    if (c == '-') {
                         state = 7;
                         lex.token += (char) c;
-                    }
-                    else if (c == -1){
+                    } else if (c == -1) {
                         lex.token = "";
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
-                    }
-                    else {
+                    } else {
                         state = 5;
                         lex.token += (char) c;
                     }
                     break;
                 case 7:
-                    if (c == ']'){
+                    if (c == ']') {
                         state = 8;
                         lex.token += (char) c;
-                    }
-                    else if (c == -1){
+                    } else if (c == -1) {
                         lex.token = "";
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
-                    }
-                    else {
+                    } else {
                         state = 5;
                         lex.token += (char) c;
                     }
                     break;
                 case 8:
-                    if (c == ']'){
+                    if (c == ']') {
                         state = 1;
-                        lex.token = ""
-                    }
-                    else if (c == -1){
+                        lex.token = "";
+                    } else if (c == -1) {
                         lex.token = "";
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
-                    }
-                    else if (c == '-'){
+                    } else if (c == '-') {
                         state = 6;
                         lex.token += (char) c;
-                    }
-                    else{
+                    } else {
                         state = 5;
                         lex.token += (char) c;
                     }
                     break;
                 case 9:
-                    if (c == '\n'){
+                    if (c == '\n') {
                         state = 1;
                         lex.token = "";
-                    }
-                    else if (c == -1){
+                    } else if (c == -1) {
                         lex.token = "";
                         lex.type = TokenType.END_OF_FILE;
                         state = 18;
-                    }
-                    else {
+                    } else {
                         lex.token += (char) c;
                         state = 9;
                     }
                     break;
                 case 10:
-                    if (c == '='){
+                    if (c == '=') {
                         lex.token += (char) c;
                         state = 17;
-                    }
-                    else {
-                        ungetc(c)
+                    } else {
+                        ungetc(c);
                         state = 17;
                     }
                     break;
                 case 11:
-                    if (c == '='){
+                    if (c == '=') {
                         lex.token += (char) c;
                         state = 17;
-                    }
-                    else{
+                    } else {
                         ungetc(c);
                         state = 18;
                         lex.type = TokenType.INVALID_TOKEN;
                     }
                     break;
                 case 12:
-                    if (c == '.'){
+                    if (c == '.') {
                         lex.token += (char) c;
                         state = 17;
-                    }
-                    else {
+                    } else {
                         ungetc(c);
                         state = 17;
                     }
                     break;
                 case 13:
-                    if(c == '_' || Character.isLetter(c) || Character.isDigit(c)){
+                    if (c == '_' || Character.isLetter(c) || Character.isDigit(c)) {
                         lex.token += (char) c;
                         state = 13;
-                    }
-                    else{
+                    } else {
                         ungetc(c);
                         state = 17;
                     }
                     break;
                 case 14:
-                    if (c == '"'){
-                        lex.token += (char) c;
+                    if (c == '"') {
+                        // lex.token += (char) c;
                         state = 18;
-                    }
-                    else if (c == -1){
+                    } else if (c == -1) {
                         lex.token = "";
                         lex.type = TokenType.UNEXPECTED_EOF;
                         state = 18;
-                    }
-                    else {
+                    } else {
                         lex.token += (char) c;
+                        lex.type = TokenType.STRING;
                         state = 14;
                     }
                     break;
                 case 15:
-                    if(c == '.'){
+                    if (c == '.') {
                         lex.token += (char) c;
                         state = 16;
-                    }
-                    else if(Character.isDigit(c)){
+                    } else if (Character.isDigit(c)) {
                         lex.token += (char) c;
                         state = 15;
-                    }
-                    else{
+                    } else {
                         ungetc(c);
                         lex.type = TokenType.NUMBER;
                         state = 18;
                     }
                     break;
                 case 16:
-                    if(Character.isDigit(c)){
+                    if (Character.isDigit(c)) {
                         lex.token += (char) c;
                         state = 16;
                     }
-                    
-                    else{
+
+                    else {
                         ungetc(c);
                         lex.type = TokenType.NUMBER;
                         state = 18;
