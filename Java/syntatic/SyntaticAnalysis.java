@@ -165,6 +165,7 @@ public class SyntaticAnalysis {
     private void procPrint() {
         eat(TokenType.PRINT);
         eat(TokenType.OPEN_PAR);
+        // ARRUMAR
         procExpr();
         eat(TokenType.CLOSE_PAR);
      }
@@ -303,6 +304,7 @@ public class SyntaticAnalysis {
     private void procFunction() {
         if (current.type == TokenType.READ || current.type == TokenType.TONUMBER || current.type == TokenType.TOSTRING ){
             eat(TokenType.OPEN_PAR);
+            // ARRUMAR
             procExpr();
             eat(TokenType.CLOSE_PAR);
         }
@@ -314,6 +316,7 @@ public class SyntaticAnalysis {
     // <table> ::= '{' [ <elem> { ',' <elem> } ] '}'
     private void procTable() {
         eat(TokenType.OPEN_CUR);
+        // ARRUMAR
         procElem();
         while (current.type == TokenType.COLON){
             advance();
