@@ -132,18 +132,33 @@ public class SyntaticAnalysis {
         procExpr();
      }
       
-     // <for> ::= for <name> (('=' <expr> ',' <expr> [',' <expr>]) | ([',' <name>]
+     // for <name> (('=' <expr> ',' <expr> [',' <expr>]) | ([',' <name>] in <expr>)) do <code> end
     private void procFor() {
         eat(TokenType.FOR);
         procName();
         
         if (current.type == TokenType.ASSIGN){
-
+            advance();
+            procExpr();
+            eat(TokenType.COLON);
+            procExpr();
+            if (current.type == TokenType.COLON){
+                advance();
+                procExpr();
+            }
         }
-        else if ( current.type == TokenType.COLON){
-
+        else{
+            if (current.type == TokenType.COLON){
+                advance();
+                procName();
+            }
+            eat(TokenType.IN);
+            procExpr();
         }
 
+        eat(TokenType.DO);
+        procCode();
+        eat(TokenType.END);
      }
       
      // <print> ::= print '(' [ <expr> ] ')'
@@ -198,15 +213,37 @@ public class SyntaticAnalysis {
      
      // <arith> ::= <term> { ('+' | '-') <term> }
     private void procArith() {
+        procTerm();
+        while (current.type == TokenType.ADD || current.type == TokenType.SUB){
+            advance();
+            procTerm();
+        }
      }
       
       // <term> ::= <factor> { ('*' | '/' | '%') <factor> }
     private void procTerm() {
+        procFactor();
+        while (current.type == TokenType.MUL || current.type == TokenType.DIV || current.type == TokenType.MOD){
+            advance();
+            procFactor();
+        }
      }
       
      // <factor> ::= '(' <expr> ')' | [ '-' | '#' | not ] <rvalue>
     private void procFactor() {
-     }
+        if (current.type == TokenType.OPEN_PAR){
+            advance();
+            procExpr();
+            eat(TokenType.CLOSE_PAR);
+        }
+        else if(current.type == TokenType.NOT || current.type == TokenType.SUB || current.type == TokenType.SIZE){
+            advance();
+            procRValue();
+        }
+        else {
+            showError();
+        }
+    }
      
      // <lvalue> ::= <name> { '.' <name> | '[' <expr> ']' }
     private void procLValue() {
@@ -264,14 +301,36 @@ public class SyntaticAnalysis {
       
     // <function> ::= (read | tonumber | tostring) '(' [ <expr> ] ')'
     private void procFunction() {
+        if (current.type == TokenType.READ || current.type == TokenType.TONUMBER || current.type == TokenType.TOSTRING ){
+            eat(TokenType.OPEN_PAR);
+            procExpr();
+            eat(TokenType.CLOSE_PAR);
+        }
+        else{
+            showError();
+        }
     }
      
     // <table> ::= '{' [ <elem> { ',' <elem> } ] '}'
     private void procTable() {
+        eat(TokenType.OPEN_CUR);
+        procElem();
+        while (current.type == TokenType.COLON){
+            advance();
+            procElem();
+        }
+        eat(TokenType.CLOSE_CUR);
     }
      
     // <elem> ::= [ '[' <expr> ']' '=' ] <expr>
     private void procElem() {
+        if(current.type == TokenType.OPEN_BRA){
+            advance();
+            procExpr();
+            eat(TokenType.CLOSE_BRA);
+            eat(TokenType.ASSIGN);
+        }
+        procExpr();
     }
      
     private void procName() {
