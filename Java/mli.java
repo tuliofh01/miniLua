@@ -1,4 +1,3 @@
-package syntatic;
 
 import lexical.Lexeme;
 import lexical.LexicalAnalysis;
