@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import interpreter.command.BlocksCommand;
+import interpreter.command.Command;
 import lexical.Lexeme;
 import lexical.LexicalAnalysis;
 import lexical.TokenType;
@@ -18,23 +20,21 @@ public class SyntaticAnalysis {
         this.current = lex.nextToken();
     }
 
-    /*
-     * public Command start() {
-     * BlocksCommand cmds = procCode();
-     * eat(TokenType.END_OF_FILE);
-     * 
-     * return cmds;//
-     * }
-     */
+    public Command start() {
+        procCode();
+        eat(TokenType.END_OF_FILE);
+        return null;//
+    }
+
     private void advance() {
-        // System.out.println("Advanced (\"" + current.token + "\", " +
-        // current.type + ")");
+        System.out.println("Advanced (\"" + current.token + "\", " +
+                current.type + ")");
         current = lex.nextToken();
     }
 
     private void eat(TokenType type) {
-        // System.out.println("Expected (..., " + type + "), found (\"" +
-        // current.token + "\", " + current.type + ")");
+        System.out.println("Expected (..., " + type + "), found (\"" +
+                current.token + "\", " + current.type + ")");
         if (type == current.type) {
             current = lex.nextToken();
         } else {
@@ -86,8 +86,8 @@ public class SyntaticAnalysis {
         } else {
             showError();
         }
-        if (current.type == TokenType.COLON) {
-            eat(TokenType.SEMI_COLON);
+        if (current.type == TokenType.SEMI_COLON) {
+            advance();
         }
     }
 
@@ -161,7 +161,21 @@ public class SyntaticAnalysis {
         eat(TokenType.PRINT);
         eat(TokenType.OPEN_PAR);
         // CHECAR
-        if (current.type == TokenType.AND || current.type == TokenType.OR) {
+
+        if (current.type == TokenType.OPEN_PAR
+                || current.type == TokenType.SUB
+                || current.type == TokenType.SIZE
+                || current.type == TokenType.NOT
+                || current.type == TokenType.NUMBER
+                || current.type == TokenType.STRING
+                || current.type == TokenType.FALSE
+                || current.type == TokenType.TRUE
+                || current.type == TokenType.NIL
+                || current.type == TokenType.READ
+                || current.type == TokenType.TONUMBER
+                || current.type == TokenType.TOSTRING
+                || current.type == TokenType.OPEN_CUR ||
+                current.type == TokenType.ID) {
             procExpr();
         }
         eat(TokenType.CLOSE_PAR);
@@ -229,17 +243,17 @@ public class SyntaticAnalysis {
         }
     }
 
-    // <factor> ::= '(' <expr> ')' | [ '-' | '#' | not ] <rvalue>
+    // <factor> ::= '(' <expr> ')' | [ -'' | '#' | not ] <rvalue>
     private void procFactor() {
         if (current.type == TokenType.OPEN_PAR) {
             advance();
             procExpr();
             eat(TokenType.CLOSE_PAR);
-        } else if (current.type == TokenType.NOT || current.type == TokenType.SUB || current.type == TokenType.SIZE) {
-            advance();
-            procRValue();
         } else {
-            showError();
+            if (current.type == TokenType.NOT || current.type == TokenType.SUB || current.type == TokenType.SIZE) {
+                advance();
+            }
+            procRValue();
         }
     }
 
