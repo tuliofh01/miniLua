@@ -19,11 +19,14 @@ public class AssignCommand extends Command {
 
     @Override
     public void execute() {
-        // FIXME: Implementar o resto.
+        // FIXME: Implementar o resto => (fazer loop para iterar pelos vetores). Atualmente so pega o primeiro rhs e lhs.
         Expr right = rhs.get(0);
+        
+        // nome var
         Value<?> v = right.expr();
 
         SetExpr left = lhs.get(0);
+        // conteudo var
         left.setValue(v);
     }
 

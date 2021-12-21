@@ -6,9 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import interpreter.command.AssignCommand;
 import interpreter.command.BlocksCommand;
 import interpreter.command.PrintCommand;
+import interpreter.command.WhileCommand;
 import interpreter.expr.ConstExpr;
+import interpreter.expr.SetExpr;
+import interpreter.expr.Variable;
 import interpreter.value.BooleanValue;
 import lexical.Lexeme;
 import lexical.LexicalAnalysis;
@@ -126,12 +130,16 @@ public class SyntaticAnalysis {
     }
 
     // <while> ::= while <expr> do <code> end
-    private void procWhile() {
+    private WhileCommand procWhile() {
         eat(TokenType.WHILE);
-        procExpr();
+        int line = lex.getLine();
+        Expr expr = procExpr();
         eat(TokenType.DO);
-        procCode();
+        Command cmds = procCode();
         eat(TokenType.END);
+
+        WhileCommand wc = new WhileCommand(line, expr, cmds);
+        return wc;
     }
 
     // <repeat> ::= repeat <code> until <expr>
@@ -203,18 +211,28 @@ public class SyntaticAnalysis {
     }
 
     // <assign> ::= <lvalue> { ',' <lvalue> } '=' <expr> { ',' <expr> }
-    private void procAssign() {
-        procLValue();
+    private AssignCommand procAssign() {
+        Vector<SetExpr> lhs = new Vector<SetExpr>();
+        Vector<Expr> rhs = new Vector<Expr>();
+
+        lhs.add(procLValue());
+
         while (current.type == TokenType.COLON) {
             advance();
-            procLValue();
+            lhs.add(procLValue());
         }
+        
         eat(TokenType.ASSIGN);
-        procExpr();
+        int line = lex.getLine();
+
+        rhs.add(procExpr());
         while (current.type == TokenType.COLON) {
             advance();
-            procExpr();
+            rhs.add(procExpr());
         }
+
+        AssignCommand ac = new AssignCommand(line, lhs, rhs)
+        return ac;
     }
 
     // <expr> ::= <rel> { (and | or) <rel> }
@@ -286,8 +304,8 @@ public class SyntaticAnalysis {
     }
 
     // <lvalue> ::= <name> { '.' <name> | '[' <expr> ']' }
-    private void procLValue() {
-        procName();
+    private SetExpr procLValue() {
+        Variable var = procName();
         while (current.type == TokenType.DOT || current.type == TokenType.OPEN_BRA) {
             if (current.type == TokenType.DOT) {
                 advance();
@@ -298,6 +316,7 @@ public class SyntaticAnalysis {
                 eat(TokenType.CLOSE_BRA);
             }
         }
+        return var;
     }
 
     // <rvalue> ::= <const> | <function> | <table> | <lvalue>
@@ -316,7 +335,7 @@ public class SyntaticAnalysis {
                 ConstExpr ce = new ConstExpr(line, v);
                 expr = ce;
         } else {
-            procLValue();
+            expr = procLValue();
         }
         return expr;
     }
@@ -384,8 +403,12 @@ public class SyntaticAnalysis {
         procExpr();
     }
 
-    private void procName() {
+    private Variable procName() {
+        String name = current.token;
+        int line = lex.getLine();
         eat(TokenType.ID);
+        Variable var = new Variable(line, name);
+        return var;
     }
 
     private void procNumber() {
