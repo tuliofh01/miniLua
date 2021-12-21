@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import interpreter.command.AssignCommand;
 import interpreter.command.BlocksCommand;
+import interpreter.command.IfCommand;
 import interpreter.command.PrintCommand;
 import interpreter.command.WhileCommand;
 import interpreter.expr.ConstExpr;
@@ -114,21 +115,41 @@ public class SyntaticAnalysis {
 
     // <if> ::= if <expr> then <code> { elseif <expr> then <code> } [ else <code> ]
     // end
-    private void procIf() {
+    private IfCommand procIf() {
+        
+        Expr expr = null;
+        Command thenCmds = null;
+        
         eat(TokenType.IF);
-        procExpr();
+
+        expr = procExpr();
+        
         eat(TokenType.THEN);
-        procCode();
+        
+        thenCmds = procCode();
+        
+        // Won't run unless previous ifs fail
         while (current.type == TokenType.ELSEIF) {
             advance();
-            procExpr();
+
+            expr = procExpr();
+
             eat(TokenType.THEN);
-            procCode();
+
+            thenCmds = procCode();
         }
+
+        int line = lex.getLine();
+
+        IfCommand ic = new IfCommand(line, expr, thenCmds);
+
         if (current.type == TokenType.ELSE) {
-            procCode();
+            ic.setElseCommands(procCode());
         }
+
         eat(TokenType.END);
+
+        return ic;
     }
 
     // <while> ::= while <expr> do <code> end
