@@ -19,9 +19,9 @@ public class RepeatCommand extends Command {
 
         Value<?> v = expr.expr();
 
-        while (v != null && v.eval){
+        do {
             cmds.execute();
-        }
+        } while (v != null && v.eval);
 
     }
 
