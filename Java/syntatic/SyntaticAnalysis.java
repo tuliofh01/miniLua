@@ -10,6 +10,7 @@ import interpreter.command.AssignCommand;
 import interpreter.command.BlocksCommand;
 import interpreter.command.IfCommand;
 import interpreter.command.PrintCommand;
+import interpreter.command.RepeatCommand;
 import interpreter.command.WhileCommand;
 import interpreter.expr.ConstExpr;
 import interpreter.expr.SetExpr;
@@ -166,11 +167,19 @@ public class SyntaticAnalysis {
     }
 
     // <repeat> ::= repeat <code> until <expr>
-    private void procRepeat() {
+    private RepeatCommand procRepeat() {
+        
+        int line = lex.getLine();
+        Expr expr = null;
+        
         eat(TokenType.REPEAT);
-        procCode();
+        Command cmds = procCode();
+        
         eat(TokenType.UNTIL);
-        procExpr();
+        expr = procExpr();
+
+        RepeatCommand rc = new RepeatCommand(line, expr, cmds);
+        return rc;
     }
 
     // for <name> (('=' <expr> ',' <expr> [',' <expr>]) | ([',' <name>] in <expr>))
