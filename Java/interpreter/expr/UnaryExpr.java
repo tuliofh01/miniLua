@@ -27,7 +27,8 @@ public class UnaryExpr extends Expr {
                 ret = negOp(v);
                 break;
             case Size:
-                // FIXME: implement me! (get lenght) => only works for strings
+                // FIXME: test me! (get lenght) => only works for strings
+                ret = sizeOp(v);
                 break;
             case Not:
                 ret = notOp(v);
@@ -66,6 +67,20 @@ public class UnaryExpr extends Expr {
         boolean b = (v == null || !v.eval());
         BooleanValue bv = new BooleanValue(b);
         return bv;
+    }
+
+    private Value<?> sizeOp(Value<?> v){
+        Value<?> ret = null;
+        if (v instanceof StringValue){
+            String tmp = v.toString();
+            Double size = Double.valueOf(tmp.length());
+            NumberValue nv = new NumberValue(size);
+            ret = nv;
+        }
+        else{
+            Utils.abort(super.getLine());
+        }
+        return ret;
     }
 
 }
