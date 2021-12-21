@@ -1,8 +1,6 @@
 
 import interpreter.command.Command;
-import lexical.Lexeme;
 import lexical.LexicalAnalysis;
-import lexical.TokenType;
 import syntatic.SyntaticAnalysis;
 
 public class mli {

@@ -1,6 +1,7 @@
 package interpreter.command;
 
 import interpreter.expr.Expr;
+import interpreter.value.Value;
 
 public class RepeatCommand extends Command {
 
@@ -21,7 +22,7 @@ public class RepeatCommand extends Command {
 
         do {
             cmds.execute();
-        } while (v != null && v.eval);
+        } while (v != null && v.eval());
 
     }
 

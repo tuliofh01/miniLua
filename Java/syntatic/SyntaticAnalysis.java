@@ -8,16 +8,21 @@ import java.util.Vector;
 
 import interpreter.command.AssignCommand;
 import interpreter.command.BlocksCommand;
+import interpreter.command.Command;
 import interpreter.command.IfCommand;
 import interpreter.command.PrintCommand;
 import interpreter.command.RepeatCommand;
 import interpreter.command.WhileCommand;
 import interpreter.expr.ConstExpr;
+import interpreter.expr.Expr;
 import interpreter.expr.SetExpr;
 import interpreter.expr.UnaryExpr;
 import interpreter.expr.UnaryOp;
 import interpreter.expr.Variable;
 import interpreter.value.BooleanValue;
+import interpreter.value.NumberValue;
+import interpreter.value.StringValue;
+import interpreter.value.Value;
 import lexical.Lexeme;
 import lexical.LexicalAnalysis;
 import lexical.TokenType;
@@ -32,23 +37,21 @@ public class SyntaticAnalysis {
         this.current = lex.nextToken();
     }
 
-    /*
-     * public Command start() {
-     * BlocksCommand cmds = procCode();
-     * eat(TokenType.END_OF_FILE);
-     * 
-     * return cmds;//
-     * }
-     */
+    
+    public Command start() {
+    BlocksCommand cmds = procCode();
+    eat(TokenType.END_OF_FILE);
+    
+    return cmds;//
+    }
+    
     private void advance() {
-        // System.out.println("Advanced (\"" + current.token + "\", " +
-        // current.type + ")");
+        System.out.println("Advanced (\"" + current.token + "\", " + current.type + ")");
         current = lex.nextToken();
     }
 
     private void eat(TokenType type) {
-        // System.out.println("Expected (..., " + type + "), found (\"" +
-        // current.token + "\", " + current.type + ")");
+        System.out.println("Expected (..., " + type + "), found (\"" + current.token + "\", " + current.type + ")");
         if (type == current.type) {
             current = lex.nextToken();
         } else {
@@ -79,9 +82,12 @@ public class SyntaticAnalysis {
     private BlocksCommand procCode() {
         int line = lex.getLine();
         List<Command> cmds = new ArrayList<Command>();
-
-        while (current.type == TokenType.IF || current.type == TokenType.WHILE || current.type == TokenType.REPEAT
-                || current.type == TokenType.FOR || current.type == TokenType.PRINT || current.type == TokenType.ID) {
+        while (current.type == TokenType.IF ||
+                current.type == TokenType.WHILE ||
+                current.type == TokenType.REPEAT ||
+                current.type == TokenType.FOR ||
+                current.type == TokenType.PRINT ||
+                current.type == TokenType.ID) {
             Command cmd = procCmd();
             cmds.add(cmd);
         }
@@ -94,22 +100,22 @@ public class SyntaticAnalysis {
     private Command procCmd() {
         Command cmd = null;
         if (current.type == TokenType.IF) {
-            procIf();
+            cmd = procIf();
         } else if (current.type == TokenType.WHILE) {
-            procWhile();
+            cmd = procWhile();
         } else if (current.type == TokenType.REPEAT) {
-            procRepeat();
+            cmd = procRepeat();
         } else if (current.type == TokenType.FOR) {
             procFor();
         } else if (current.type == TokenType.PRINT) {
             cmd = procPrint();
         } else if (current.type == TokenType.ID) {
-            procAssign();
+            cmd = procAssign();
         } else {
             showError();
         }
-        if (current.type == TokenType.COLON) {
-            eat(TokenType.SEMI_COLON);
+        if (current.type == TokenType.SEMI_COLON) {
+            advance();
         }
         return cmd;
     }
@@ -263,7 +269,7 @@ public class SyntaticAnalysis {
             rhs.add(procExpr());
         }
 
-        AssignCommand ac = new AssignCommand(line, lhs, rhs)
+        AssignCommand ac = new AssignCommand(line, lhs, rhs);
         return ac;
     }
 
@@ -460,8 +466,13 @@ public class SyntaticAnalysis {
         return var;
     }
 
-    private void procNumber() {
+    private NumberValue procNumber() {
+        String tmp = current.token;
         eat(TokenType.NUMBER);
+
+        Double d = Double.valueOf(tmp);
+        NumberValue nv = new NumberValue(d);
+        return nv;
     }
 
     private StringValue procString() {
