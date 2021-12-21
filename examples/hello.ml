@@ -1,2 +1,5 @@
-abc = 123;
-print("ola");
+abc = 1
+
+if false then 
+    print(abc)
+end
