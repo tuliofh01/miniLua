@@ -12,6 +12,8 @@ import interpreter.command.PrintCommand;
 import interpreter.command.WhileCommand;
 import interpreter.expr.ConstExpr;
 import interpreter.expr.SetExpr;
+import interpreter.expr.UnaryExpr;
+import interpreter.expr.UnaryOp;
 import interpreter.expr.Variable;
 import interpreter.value.BooleanValue;
 import lexical.Lexeme;
@@ -295,10 +297,27 @@ public class SyntaticAnalysis {
             procExpr();
             eat(TokenType.CLOSE_PAR);
         } else {
-            if (current.type == TokenType.NOT || current.type == TokenType.SUB || current.type == TokenType.SIZE) {
+            UnaryOp op = null;
+            if (current.type == TokenType.NOT){
                 advance();
+                op = UnaryOp.Not;
             }
+            else if(current.type == TokenType.SUB){
+                advance();
+                op = UnaryOp.Neg;
+            } 
+            else if(current.type == TokenType.SIZE) {
+                advance();
+                op = UnaryOp.Size;
+
+            }
+            
+            int line = lex.getLine();
             expr = procRValue();
+
+            if (op != null){
+                expr = new UnaryExpr(line, expr, op);
+            }
         }
         return expr;
     }

@@ -27,7 +27,7 @@ public class UnaryExpr extends Expr {
                 ret = negOp(v);
                 break;
             case Size:
-                // FIXME: implement me!
+                // FIXME: implement me! (get lenght) => only works for strings
                 break;
             case Not:
                 ret = notOp(v);
