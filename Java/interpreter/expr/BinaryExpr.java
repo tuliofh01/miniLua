@@ -66,7 +66,7 @@ public class BinaryExpr extends Expr{
             return right.expr();
         else if (v instanceof BooleanValue){
             BooleanValue bv = (BooleanValue) v;
-            if(bv.value() == false)
+            if(bv.eval() == false)
                 return right.expr();
         }
         return v;
@@ -97,6 +97,28 @@ public class BinaryExpr extends Expr{
             v = right.expr();
         }     
         return v;
+    }
+
+    private Value<?> equalOp(){
+        if(right.expr().value() == left.expr().value()){
+            BooleanValue fv = new BooleanValue(true);
+            return fv;
+        }
+        else{
+            BooleanValue fv = new BooleanValue(false);
+            return fv;
+        }
+    }
+
+    private Value<?> notEqualOp(){
+        if(right.expr().value() != left.expr().value()){
+            BooleanValue fv = new BooleanValue(true);
+            return fv;
+        }
+        else{
+            BooleanValue fv = new BooleanValue(false);
+            return fv;
+        }
     }
 
 }
