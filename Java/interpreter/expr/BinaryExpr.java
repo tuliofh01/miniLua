@@ -72,4 +72,31 @@ public class BinaryExpr extends Expr{
         return v;
     }
 
+    private Value<?> andOp(){
+        Value<?> v = null;
+
+        Boolean bv1 = right.expr().eval();
+        Boolean bv2 = left.expr().eval();
+
+        if(right.expr() == null || left.expr() == null)
+            v = null;
+        else if (right.expr() instanceof BooleanValue || left.expr() instanceof BooleanValue){
+            if(bv1== true && bv2== true && right.expr() instanceof BooleanValue && left.expr() instanceof BooleanValue){
+                BooleanValue fv = new BooleanValue(true);
+                v = fv;
+            }
+            else if(bv1 == true && bv2 == true && (right.expr() instanceof BooleanValue) == false){
+                v = right.expr();
+            }
+            else{
+                BooleanValue fv = new BooleanValue(false);
+                v = fv;
+            }
+        }
+        else{
+            v = right.expr();
+        }     
+        return v;
+    }
+
 }

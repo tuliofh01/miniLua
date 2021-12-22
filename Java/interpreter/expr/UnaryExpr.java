@@ -1,10 +1,13 @@
 package interpreter.expr;
 
+import java.util.Scanner;
+
+import interpreter.util.Utils;
 import interpreter.value.BooleanValue;
 import interpreter.value.NumberValue;
 import interpreter.value.StringValue;
+import interpreter.value.TableValue;
 import interpreter.value.Value;
-import interpreter.util.Utils;
 
 public class UnaryExpr extends Expr {
 
@@ -19,7 +22,7 @@ public class UnaryExpr extends Expr {
 
     @Override
     public Value<?> expr() {
-        Value<?> v = expr.expr();
+        Value<?> v = expr != null ? expr.expr() : null;
 
         Value<?> ret = null;
         switch (op) {
@@ -40,7 +43,8 @@ public class UnaryExpr extends Expr {
                 // fix me
                 break;
             case Read:
-                // fix me
+                // test me
+                ret = readOp(v);
                 break;
             default:
                 Utils.abort(super.getLine());
@@ -86,10 +90,26 @@ public class UnaryExpr extends Expr {
             NumberValue nv = new NumberValue(size);
             ret = nv;
         }
+        else if (v instanceof TableValue){
+            TableValue tv = (TableValue) v;
+            Double size = Double.valueOf(tv.value().size());
+            NumberValue nv = new NumberValue(size);
+            ret = nv;
+        }
         else{
             Utils.abort(super.getLine());
         }
         return ret;
+    }
+
+    private Value<?> readOp(Value<?> v){
+        if (v != null)
+            System.out.print(v.toString());
+        Scanner scanner = new Scanner(System.in);
+        String tmp = scanner.next().trim();
+        StringValue sv = new StringValue(tmp);
+        scanner.close();
+        return sv;
     }
 
 }
