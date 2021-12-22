@@ -418,19 +418,48 @@ public class SyntaticAnalysis {
     }
 
     // <function> ::= (read | tonumber | tostring) '(' [ <expr> ] ')'
-    private void procFunction() {
-        if (current.type == TokenType.READ || current.type == TokenType.TONUMBER
-                || current.type == TokenType.TOSTRING) {
-            eat(TokenType.OPEN_PAR);
-            // CHECAR
-            if (current.type == TokenType.AND || current.type == TokenType.OR) {
-                procExpr();
-            }
-            procExpr();
-            eat(TokenType.CLOSE_PAR);
-        } else {
+    private Value<?> procFunction() {
+        Expr expr = null;
+        UnaryOp op = null;
+        int line = lex.getLine();
+
+        if(current.type == TokenType.READ){
+            op = UnaryOp.Read;
+        }
+        else if(current.type == TokenType.TONUMBER){
+            op = UnaryOp.ToNumber;
+        }
+        else if (current.type == TokenType.TOSTRING){
+            op = UnaryOp.ToString;
+        } 
+        else {
             showError();
         }
+
+        eat(TokenType.OPEN_PAR);
+
+        if (current.type == TokenType.OPEN_PAR ||
+        current.type == TokenType.SUB ||
+        current.type == TokenType.SIZE ||
+        current.type == TokenType.NOT ||
+        current.type == TokenType.NUMBER ||
+        current.type == TokenType.STRING ||
+        current.type == TokenType.FALSE ||
+        current.type == TokenType.TRUE ||
+        current.type == TokenType.NIL ||
+        current.type == TokenType.READ ||
+        current.type == TokenType.TONUMBER ||
+        current.type == TokenType.TOSTRING ||
+        current.type == TokenType.OPEN_CUR ||
+        current.type == TokenType.ID) {
+            expr = procExpr(); 
+        }
+
+        UnaryExpr ue = new UnaryExpr(line, expr, op);
+
+        eat(TokenType.CLOSE_PAR);
+
+        return ue.expr();
     }
 
     // <table> ::= '{' [ <elem> { ',' <elem> } ] '}'

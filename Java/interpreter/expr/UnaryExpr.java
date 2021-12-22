@@ -27,11 +27,20 @@ public class UnaryExpr extends Expr {
                 ret = negOp(v);
                 break;
             case Size:
-                // FIXME: test me! (get lenght) => only works for strings
+                // test me
                 ret = sizeOp(v);
                 break;
             case Not:
                 ret = notOp(v);
+                break;
+            case ToNumber:
+                // fix me
+                break;
+            case ToString:
+                // fix me
+                break;
+            case Read:
+                // fix me
                 break;
             default:
                 Utils.abort(super.getLine());
