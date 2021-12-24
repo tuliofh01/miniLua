@@ -1,5 +1,2 @@
-abc = 1
-
-if false then 
-    print(abc)
-end
+abc = 2 > 1
+print(abc)

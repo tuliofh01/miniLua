@@ -23,8 +23,8 @@ public class BinaryExpr extends Expr{
     public Value<?> expr(){
         Value<?> v = null;
 
+        System.out.println("Operações binárias!");
         switch (op){
-            
             case AndOp:
                 break;
             case OrOp:

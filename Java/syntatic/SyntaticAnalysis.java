@@ -13,6 +13,8 @@ import interpreter.command.IfCommand;
 import interpreter.command.PrintCommand;
 import interpreter.command.RepeatCommand;
 import interpreter.command.WhileCommand;
+import interpreter.expr.BinaryExpr;
+import interpreter.expr.BinaryOp;
 import interpreter.expr.ConstExpr;
 import interpreter.expr.Expr;
 import interpreter.expr.SetExpr;
@@ -286,13 +288,52 @@ public class SyntaticAnalysis {
     // <rel> ::= <concat> [ ('<' | '>' | '<=' | '>=' | '~=' | '==') <concat> ]
     private Expr procRel() {
         Expr expr = procConcat();
-        if (current.type == TokenType.LOWER_THAN || current.type == TokenType.GREATER_THAN
-                || current.type == TokenType.LOWER_EQUAL || current.type == TokenType.GREATER_EQUAL
-                || current.type == TokenType.NOT_EQUAL || current.type == TokenType.EQUAL) {
+        
+        if (current.type == TokenType.LOWER_THAN){
             advance();
-            procConcat();
+            BinaryOp op = BinaryOp.LowerThanOp;
+            Expr expr2 = procConcat();
+            BinaryExpr be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+            return be;
         }
-        return expr;
+        else if(current.type == TokenType.GREATER_THAN){
+            advance();
+            BinaryOp op = BinaryOp.GreaterThanOp;
+            Expr expr2 = procConcat();
+            BinaryExpr be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+            return be;
+        }
+        else if(current.type == TokenType.LOWER_EQUAL){
+            advance();
+            BinaryOp op = BinaryOp.LowerEqualOp;
+            Expr expr2 = procConcat();
+            BinaryExpr be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+            return be;
+        }
+        else if(current.type == TokenType.GREATER_EQUAL){
+            advance();
+            BinaryOp op = BinaryOp.GreaterEqualOp;
+            Expr expr2 = procConcat();
+            BinaryExpr be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+            return be;
+        }
+        else if(current.type == TokenType.NOT_EQUAL){
+            advance();
+            BinaryOp op = BinaryOp.NotEqualOp;
+            Expr expr2 = procConcat();
+            BinaryExpr be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+            return be;
+        }
+        else if(current.type == TokenType.EQUAL){
+            advance();
+            BinaryOp op = BinaryOp.EqualOp;
+            Expr expr2 = procConcat();
+            BinaryExpr be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+            return be;
+        }
+        else {
+            return expr;
+        }
     }
 
     // <concat> ::= <arith> { '..' <arith> }
