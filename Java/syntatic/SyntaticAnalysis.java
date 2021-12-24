@@ -275,7 +275,7 @@ public class SyntaticAnalysis {
         return ac;
     }
 
-    // <expr> ::= <rel> { (and | or) <rel> }
+    // <expr> ::= <rel> { (and | or) <rel> } => ARRUMAR
     private Expr procExpr() {
         Expr expr = procRel();
         while (current.type == TokenType.AND || current.type == TokenType.OR) {
@@ -336,7 +336,7 @@ public class SyntaticAnalysis {
         }
     }
 
-    // <concat> ::= <arith> { '..' <arith> }
+    // <concat> ::= <arith> { '..' <arith> } => ARRUMAR
     private Expr procConcat() {
         Expr expr = procArith();
         while (current.type == TokenType.CONCAT) {
@@ -346,7 +346,7 @@ public class SyntaticAnalysis {
         return expr;
     }
 
-    // <arith> ::= <term> { ('+' | '-') <term> }
+    // <arith> ::= <term> { ('+' | '-') <term> } => ARRUMAR
     private Expr procArith() {
         Expr expr = procTerm();
         while (current.type == TokenType.ADD || current.type == TokenType.SUB) {
@@ -356,7 +356,7 @@ public class SyntaticAnalysis {
         return expr;
     }
 
-    // <term> ::= <factor> { ('*' | '/' | '%') <factor> }
+    // <term> ::= <factor> { ('*' | '/' | '%') <factor> }  => ARRUMAR
     private Expr procTerm() {
         Expr expr = procFactor();
         while (current.type == TokenType.MUL || current.type == TokenType.DIV || current.type == TokenType.MOD) {
