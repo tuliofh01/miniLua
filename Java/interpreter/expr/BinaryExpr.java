@@ -194,60 +194,82 @@ public class BinaryExpr extends Expr {
     }
 
     private Value<?> concatOp() {
-        System.out.println("concat expression");
+        // System.out.println("concat expression");
+        StringValue nv = null;
         if (left.expr().value() instanceof String && right.expr().value() instanceof String) {
-            System.out.println("if");
-            StringValue nv = new StringValue(((String) left.expr().value()) + ((String) right.expr().value()));
-            return nv;
+            // System.out.println("if");
+            nv = new StringValue(((String) left.expr().value()) + ((String) right.expr().value()));
+
         } else {
-            System.out.println("else");
-            return null;
+            Utils.abort(super.getLine());
+
         }
+        return nv;
     }
 
     private Value<?> addOp() {
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue) {
-            NumberValue nv = new NumberValue(((Double) left.expr().value()) + ((Double) right.expr().value()));
-            return nv;
+        NumberValue nv = null;
+        if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
+            // System.out.println("if");
+            nv = new NumberValue(((Double) left.expr().value()) + ((Double) right.expr().value()));
+
         } else {
-            return null;
+            Utils.abort(super.getLine());
+
         }
+        return nv;
     }
 
     private Value<?> subOp() {
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue) {
-            NumberValue nv = new NumberValue(((Double) left.expr().value()) - ((Double) right.expr().value()));
-            return nv;
+        NumberValue nv = null;
+        if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
+            // System.out.println("if");
+            nv = new NumberValue(((Double) left.expr().value()) - ((Double) right.expr().value()));
+
         } else {
-            return null;
+            Utils.abort(super.getLine());
+
         }
+        return nv;
     }
 
     private Value<?> mulOp() {
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue) {
-            NumberValue nv = new NumberValue(((Double) left.expr().value()) * ((Double) right.expr().value()));
-            return nv;
+        NumberValue nv = null;
+        if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
+            // System.out.println("if");
+            nv = new NumberValue(((Double) left.expr().value()) * ((Double) right.expr().value()));
+
         } else {
-            return null;
+            Utils.abort(super.getLine());
+
         }
+        return nv;
     }
 
     private Value<?> divOp() {
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue) {
-            NumberValue nv = new NumberValue(((Double) left.expr().value()) / ((Double) right.expr().value()));
-            return nv;
+        NumberValue nv = null;
+        if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
+            // System.out.println("if");
+            nv = new NumberValue(((Double) left.expr().value()) / ((Double) right.expr().value()));
+
         } else {
-            return null;
+            Utils.abort(super.getLine());
+
         }
+        return nv;
     }
 
     private Value<?> modOp() {
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue) {
-            NumberValue nv = new NumberValue(((Double) left.expr().value()) % ((Double) right.expr().value()));
-            return nv;
+        NumberValue nv = null;
+        if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
+            // System.out.println("if");
+            nv = new NumberValue(((Double) left.expr().value()) % ((Double) right.expr().value()));
+
         } else {
-            return null;
+            Utils.abort(super.getLine());
+
         }
+        return nv;
     }
 
 }

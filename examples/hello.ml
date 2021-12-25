@@ -1,4 +1,2 @@
-a = "hello"
-b = " world"
-k = " yo"
-print(a..b)
+a = 1 + 2
+print(a)
