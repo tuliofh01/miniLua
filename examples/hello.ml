@@ -1,2 +1,4 @@
-abc = 2 > 1
-print(abc)
+a = "hello"
+b = " world"
+k = " yo"
+print(a..b)

@@ -6,26 +6,28 @@ import interpreter.value.NumberValue;
 import interpreter.value.StringValue;
 import interpreter.value.Value;
 
-public class BinaryExpr extends Expr{
+public class BinaryExpr extends Expr {
 
     private Expr left;
     private Expr right;
 
     private BinaryOp op;
 
-
-    public BinaryExpr(int line, Expr left, BinaryOp op, Expr right){
+    public BinaryExpr(int line, Expr left, BinaryOp op, Expr right) {
         super(line);
-        this.left = left; this.right = right; this.op = op;
+        this.left = left;
+        this.right = right;
+        this.op = op;
     }
 
     @Override
-    public Value<?> expr(){
+    public Value<?> expr() {
         Value<?> v = null;
 
-        System.out.println("Operações binárias!");
-        switch (op){
+        // System.out.println("Operações binárias!");
+        switch (op) {
             case AndOp:
+                v = andOp();
                 break;
             case OrOp:
                 v = orOp();
@@ -72,201 +74,178 @@ public class BinaryExpr extends Expr{
 
         return v;
     }
-    
+
     // Não recebe parametros
     private Value<?> orOp() {
         Value<?> v = left.expr();
         if (v == null)
             return right.expr();
-        else if (v instanceof BooleanValue){
+        else if (v instanceof BooleanValue) {
             BooleanValue bv = (BooleanValue) v;
-            if(bv.eval() == false)
+            if (bv.eval() == false)
                 return right.expr();
         }
         return v;
     }
 
-    private Value<?> andOp(){
+    private Value<?> andOp() {
         Value<?> v = null;
 
         Boolean bv1 = right.expr().eval();
         Boolean bv2 = left.expr().eval();
 
-        if(right.expr() == null || left.expr() == null)
+        if (right.expr() == null || left.expr() == null)
             v = null;
-        else if (right.expr() instanceof BooleanValue || left.expr() instanceof BooleanValue){
-            if(bv1== true && bv2== true && right.expr() instanceof BooleanValue && left.expr() instanceof BooleanValue){
+        else if (right.expr() instanceof BooleanValue || left.expr() instanceof BooleanValue) {
+            if (bv1 == true && bv2 == true && right.expr() instanceof BooleanValue
+                    && left.expr() instanceof BooleanValue) {
                 BooleanValue fv = new BooleanValue(true);
                 v = fv;
-            }
-            else if(bv1 == true && bv2 == true && (right.expr() instanceof BooleanValue) == false){
+            } else if (bv1 == true && bv2 == true && (right.expr() instanceof BooleanValue) == false) {
                 v = right.expr();
-            }
-            else{
+            } else {
                 BooleanValue fv = new BooleanValue(false);
                 v = fv;
             }
-        }
-        else{
+        } else {
             v = right.expr();
-        }     
+        }
         return v;
     }
 
-    private Value<?> equalOp(){
-        if(right.expr().value() == left.expr().value()){
+    private Value<?> equalOp() {
+        if (right.expr().value() == left.expr().value()) {
             BooleanValue fv = new BooleanValue(true);
             return fv;
-        }
-        else{
+        } else {
             BooleanValue fv = new BooleanValue(false);
             return fv;
         }
     }
 
-    private Value<?> notEqualOp(){
-        if(right.expr().value() != left.expr().value()){
+    private Value<?> notEqualOp() {
+        if (right.expr().value() != left.expr().value()) {
             BooleanValue fv = new BooleanValue(true);
             return fv;
-        }
-        else{
+        } else {
             BooleanValue fv = new BooleanValue(false);
             return fv;
         }
     }
 
-    private Value<?> lowerThanOp(){
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue){
+    private Value<?> lowerThanOp() {
+        BooleanValue fv = null;
+        if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
             // Compara 2 números
-            NumberValue nvl = new NumberValue((Double) left.expr().value());
-            NumberValue nvr = new NumberValue((Double) right.expr().value());
-            if(nvl.value() < nvr.value()){
-                BooleanValue fv = new BooleanValue(true);
-                return fv;
+            if ((Double) left.expr().value() < (Double) right.expr().value()) {
+                fv = new BooleanValue(true);
+            } else {
+                fv = new BooleanValue(false);
             }
-            else {
-                BooleanValue fv = new BooleanValue(false);
-                return fv;
-            }
+        } else {
+            Utils.abort(super.getLine());
         }
-        else{
-            return null;
-        }
+        return fv;
     }
 
-    private Value<?> lowerEqualOp(){
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue){
+    private Value<?> lowerEqualOp() {
+        BooleanValue fv = null;
+        if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
             // Compara 2 números
-            NumberValue nvl = new NumberValue((Double) left.expr().value());
-            NumberValue nvr = new NumberValue((Double) right.expr().value());
-            if(nvl.value() <= nvr.value()){
-                BooleanValue fv = new BooleanValue(true);
-                return fv;
+            if ((Double) left.expr().value() <= (Double) right.expr().value()) {
+                fv = new BooleanValue(true);
+            } else {
+                fv = new BooleanValue(false);
             }
-            else {
-                BooleanValue fv = new BooleanValue(false);
-                return fv;
-            }
+        } else {
+            Utils.abort(super.getLine());
         }
-        else{
-            return null;
-        }
+        return fv;
     }
 
-    private Value<?> greaterThanOp(){
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue){
+    private Value<?> greaterThanOp() {
+        BooleanValue fv = null;
+        if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
             // Compara 2 números
-            NumberValue nvl = new NumberValue((Double) left.expr().value());
-            NumberValue nvr = new NumberValue((Double) right.expr().value());
-            if(nvl.value() > nvr.value()){
-                BooleanValue fv = new BooleanValue(true);
-                return fv;
+            if ((Double) left.expr().value() > (Double) right.expr().value()) {
+                fv = new BooleanValue(true);
+            } else {
+                fv = new BooleanValue(false);
             }
-            else {
-                BooleanValue fv = new BooleanValue(false);
-                return fv;
-            }
+        } else {
+            Utils.abort(super.getLine());
         }
-        else{
-            return null;
-        }
+        return fv;
     }
 
-    private Value<?> greaterEqualOp(){
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue){
+    private Value<?> greaterEqualOp() {
+        BooleanValue fv = null;
+        if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
             // Compara 2 números
-            NumberValue nvl = new NumberValue((Double) left.expr().value());
-            NumberValue nvr = new NumberValue((Double) right.expr().value());
-            if(nvl.value() >= nvr.value()){
-                BooleanValue fv = new BooleanValue(true);
-                return fv;
+            if ((Double) left.expr().value() >= (Double) right.expr().value()) {
+                fv = new BooleanValue(true);
+            } else {
+                fv = new BooleanValue(false);
             }
-            else {
-                BooleanValue fv = new BooleanValue(false);
-                return fv;
-            }
+        } else {
+            Utils.abort(super.getLine());
         }
-        else{
-            return null;
-        }
+        return fv;
     }
 
-    private Value<?> concatOp(){
-        if (left.expr().value() instanceof StringValue && right.expr().value() instanceof StringValue){
+    private Value<?> concatOp() {
+        System.out.println("concat expression");
+        if (left.expr().value() instanceof String && right.expr().value() instanceof String) {
+            System.out.println("if");
             StringValue nv = new StringValue(((String) left.expr().value()) + ((String) right.expr().value()));
             return nv;
-        }
-        else{
+        } else {
+            System.out.println("else");
             return null;
         }
     }
 
-    private Value<?> addOp(){
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue){
+    private Value<?> addOp() {
+        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue) {
             NumberValue nv = new NumberValue(((Double) left.expr().value()) + ((Double) right.expr().value()));
             return nv;
-        }
-        else{
+        } else {
             return null;
         }
     }
 
-    private Value<?> subOp(){
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue){
+    private Value<?> subOp() {
+        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue) {
             NumberValue nv = new NumberValue(((Double) left.expr().value()) - ((Double) right.expr().value()));
             return nv;
-        }
-        else{
+        } else {
             return null;
         }
     }
-    
-    private Value<?> mulOp(){
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue){
+
+    private Value<?> mulOp() {
+        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue) {
             NumberValue nv = new NumberValue(((Double) left.expr().value()) * ((Double) right.expr().value()));
             return nv;
-        }
-        else{
+        } else {
             return null;
         }
     }
 
-    private Value<?> divOp(){
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue){
+    private Value<?> divOp() {
+        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue) {
             NumberValue nv = new NumberValue(((Double) left.expr().value()) / ((Double) right.expr().value()));
             return nv;
-        }
-        else{
+        } else {
             return null;
         }
     }
 
-    private Value<?> modOp(){
-        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue){
+    private Value<?> modOp() {
+        if (left.expr().value() instanceof NumberValue && right.expr().value() instanceof NumberValue) {
             NumberValue nv = new NumberValue(((Double) left.expr().value()) % ((Double) right.expr().value()));
             return nv;
-        }
-        else{
+        } else {
             return null;
         }
     }
