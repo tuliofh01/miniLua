@@ -194,15 +194,11 @@ public class BinaryExpr extends Expr {
     }
 
     private Value<?> concatOp() {
-        // System.out.println("concat expression");
         StringValue nv = null;
         if (left.expr().value() instanceof String && right.expr().value() instanceof String) {
-            // System.out.println("if");
             nv = new StringValue(((String) left.expr().value()) + ((String) right.expr().value()));
-
         } else {
             Utils.abort(super.getLine());
-
         }
         return nv;
     }
@@ -210,12 +206,9 @@ public class BinaryExpr extends Expr {
     private Value<?> addOp() {
         NumberValue nv = null;
         if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
-            // System.out.println("if");
             nv = new NumberValue(((Double) left.expr().value()) + ((Double) right.expr().value()));
-
         } else {
             Utils.abort(super.getLine());
-
         }
         return nv;
     }
@@ -223,12 +216,9 @@ public class BinaryExpr extends Expr {
     private Value<?> subOp() {
         NumberValue nv = null;
         if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
-            // System.out.println("if");
             nv = new NumberValue(((Double) left.expr().value()) - ((Double) right.expr().value()));
-
         } else {
             Utils.abort(super.getLine());
-
         }
         return nv;
     }
@@ -236,12 +226,9 @@ public class BinaryExpr extends Expr {
     private Value<?> mulOp() {
         NumberValue nv = null;
         if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
-            // System.out.println("if");
             nv = new NumberValue(((Double) left.expr().value()) * ((Double) right.expr().value()));
-
         } else {
             Utils.abort(super.getLine());
-
         }
         return nv;
     }
@@ -249,12 +236,9 @@ public class BinaryExpr extends Expr {
     private Value<?> divOp() {
         NumberValue nv = null;
         if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
-            // System.out.println("if");
             nv = new NumberValue(((Double) left.expr().value()) / ((Double) right.expr().value()));
-
         } else {
             Utils.abort(super.getLine());
-
         }
         return nv;
     }
@@ -262,12 +246,9 @@ public class BinaryExpr extends Expr {
     private Value<?> modOp() {
         NumberValue nv = null;
         if (left.expr().value() instanceof Double && right.expr().value() instanceof Double) {
-            // System.out.println("if");
             nv = new NumberValue(((Double) left.expr().value()) % ((Double) right.expr().value()));
-
         } else {
             Utils.abort(super.getLine());
-
         }
         return nv;
     }

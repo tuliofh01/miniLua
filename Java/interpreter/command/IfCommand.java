@@ -1,6 +1,5 @@
 package interpreter.command;
 
-import interpreter.expr.BinaryExpr;
 import interpreter.expr.Expr;
 import interpreter.value.Value;
 
