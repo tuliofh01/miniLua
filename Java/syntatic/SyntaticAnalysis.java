@@ -278,11 +278,31 @@ public class SyntaticAnalysis {
     // <expr> ::= <rel> { (and | or) <rel> } => ARRUMAR
     private Expr procExpr() {
         Expr expr = procRel();
-        while (current.type == TokenType.AND || current.type == TokenType.OR) {
-            advance();
-            procRel();
+        if (current.type == TokenType.AND){
+            BinaryExpr be = null;
+            while (current.type == TokenType.AND){
+                advance();
+                BinaryOp op = BinaryOp.AndOp;
+                Expr expr2 = procTerm();
+                be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+                advance();
+            }
+            return be;
         }
-        return expr;
+        else if (current.type == TokenType.OR){
+            BinaryExpr be = null;
+            while (current.type == TokenType.OR){
+                advance();
+                BinaryOp op = BinaryOp.OrOp;
+                Expr expr2 = procRel();
+                be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+                advance();
+            }
+            return be;
+        }
+        else {
+            return expr;
+        }
     }
 
     // <rel> ::= <concat> [ ('<' | '>' | '<=' | '>=' | '~=' | '==') <concat> ]
@@ -339,31 +359,91 @@ public class SyntaticAnalysis {
     // <concat> ::= <arith> { '..' <arith> } => ARRUMAR
     private Expr procConcat() {
         Expr expr = procArith();
-        while (current.type == TokenType.CONCAT) {
-            advance();
-            procArith();
+        if (current.type == TokenType.CONCAT){
+            BinaryExpr be = null;
+            while (current.type == TokenType.CONCAT){
+                advance();
+                BinaryOp op = BinaryOp.ConcatOp;
+                Expr expr2 = procArith();
+                be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+                advance();
+            }
+            return be;
         }
-        return expr;
+        else {
+            return expr;
+        }
     }
 
     // <arith> ::= <term> { ('+' | '-') <term> } => ARRUMAR
     private Expr procArith() {
         Expr expr = procTerm();
-        while (current.type == TokenType.ADD || current.type == TokenType.SUB) {
-            advance();
-            procTerm();
+        if (current.type == TokenType.ADD){
+            BinaryExpr be = null;
+            while (current.type == TokenType.ADD){
+                advance();
+                BinaryOp op = BinaryOp.AddOp;
+                Expr expr2 = procTerm();
+                be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+                advance();
+            }
+            return be;
         }
-        return expr;
+        else if (current.type == TokenType.SUB){
+            BinaryExpr be = null;
+            while (current.type == TokenType.SUB){
+                advance();
+                BinaryOp op = BinaryOp.SubOp;
+                Expr expr2 = procTerm();
+                be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+                advance();
+            }
+            return be;
+        }
+        else {
+            return expr;
+        }
     }
 
     // <term> ::= <factor> { ('*' | '/' | '%') <factor> }  => ARRUMAR
     private Expr procTerm() {
         Expr expr = procFactor();
-        while (current.type == TokenType.MUL || current.type == TokenType.DIV || current.type == TokenType.MOD) {
-            advance();
-            procFactor();
+        if (current.type == TokenType.MUL){
+            BinaryExpr be = null;
+            while (current.type == TokenType.MUL){
+                advance();
+                BinaryOp op = BinaryOp.MulOp;
+                Expr expr2 = procFactor();
+                be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+                advance();
+            }
+            return be;
         }
-        return expr;
+        else if (current.type == TokenType.DIV){
+            BinaryExpr be = null;
+            while (current.type == TokenType.DIV){
+                advance();
+                BinaryOp op = BinaryOp.DivOp;
+                Expr expr2 = procFactor();
+                be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+                advance();
+            }
+            return be;
+        }
+        else if (current.type == TokenType.MOD){
+            BinaryExpr be = null;
+            while (current.type == TokenType.MOD){
+                advance();
+                BinaryOp op = BinaryOp.ModOp;
+                Expr expr2 = procFactor();
+                be = new BinaryExpr(lex.getLine(), expr, op, expr2);
+                advance();
+            }
+            return be;
+        }
+        else {
+            return expr;
+        }
     }
 
     // <factor> ::= '(' <expr> ')' | [ '-' | '#' | not ] <rvalue>
