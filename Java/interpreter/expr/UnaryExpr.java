@@ -30,22 +30,18 @@ public class UnaryExpr extends Expr {
                 ret = negOp(v);
                 break;
             case Size:
-                // test me
                 ret = sizeOp(v);
                 break;
             case Not:
                 ret = notOp(v);
                 break;
             case ToNumber:
-                // test me
                 ret = toNumberOp(v);
                 break;
             case ToString:
-                // test me
                 ret = toStringOp(v);
                 break;
             case Read:
-                // test me
                 ret = readOp(v);
                 break;
             default:

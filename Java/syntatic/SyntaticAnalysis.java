@@ -13,6 +13,7 @@ import interpreter.command.IfCommand;
 import interpreter.command.PrintCommand;
 import interpreter.command.RepeatCommand;
 import interpreter.command.WhileCommand;
+import interpreter.expr.AccessExpr;
 import interpreter.expr.BinaryExpr;
 import interpreter.expr.BinaryOp;
 import interpreter.expr.ConstExpr;
@@ -421,8 +422,10 @@ public class SyntaticAnalysis {
                 procName();
             } else {
                 advance();
-                procExpr();
+                Expr index = procExpr();
                 eat(TokenType.CLOSE_BRA);
+                AccessExpr fe = new AccessExpr(lex.getLine(), var, index);
+                return fe;
             }
         }
         return var;
