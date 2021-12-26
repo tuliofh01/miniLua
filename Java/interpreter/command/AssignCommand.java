@@ -21,12 +21,24 @@ public class AssignCommand extends Command {
     @Override
     public void execute() {
         ArrayList<Value<?>> list = new ArrayList<Value<?>>();
-        for (int index = 0; index < lhs.size(); index++) {
-            Expr right = rhs.get(index);
-            list.add(right.expr());
-            SetExpr left = lhs.get(index);
-            left.setValue(list.get(index));
+        if (lhs.size() > rhs.size()) {
+            for (int index = 0; index < rhs.size(); index++) {
+                Expr right = rhs.get(index);
+                list.add(right.expr());
+                SetExpr left = lhs.get(index);
+                left.setValue(list.get(index));
+
+            }
+        } else {
+            for (int index = 0; index < lhs.size(); index++) {
+                Expr right = rhs.get(index);
+                list.add(right.expr());
+                SetExpr left = lhs.get(index);
+                left.setValue(list.get(index));
+
+            }
         }
+
     }
 
 }
