@@ -1,3 +1,2 @@
-a = tostring(0)
+a = {1, 2, ["oi"] = 0, 3}
 print(a)
-print(a == "0.0")

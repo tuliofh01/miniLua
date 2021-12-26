@@ -39,7 +39,7 @@ public class TableExpr extends Expr {
                 seq++;
             }
             else{
-                // implementar
+                map.put(key.expr(), value.expr());
             }
         }
         

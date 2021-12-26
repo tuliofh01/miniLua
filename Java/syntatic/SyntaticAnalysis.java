@@ -18,6 +18,8 @@ import interpreter.expr.BinaryOp;
 import interpreter.expr.ConstExpr;
 import interpreter.expr.Expr;
 import interpreter.expr.SetExpr;
+import interpreter.expr.TableEntry;
+import interpreter.expr.TableExpr;
 import interpreter.expr.UnaryExpr;
 import interpreter.expr.UnaryOp;
 import interpreter.expr.Variable;
@@ -186,39 +188,7 @@ public class SyntaticAnalysis {
     // for <name> (('=' <expr> ',' <expr> [',' <expr>]) | ([',' <name>] in <expr>))
     // do <code> end
     private void procFor() {
-        eat(TokenType.FOR);
-
-        Expr name = procLValue();
-        if (current.type == TokenType.ASSIGN){
-            Vector<SetExpr> lhs = new Vector<SetExpr>(); Vector<Expr> rhs = new Vector<Expr>();
-            lhs.add((SetExpr) name); 
-            Expr value = procExpr(); int line = lex.getLine();
-            rhs.add(value);
-            AssignCommand ac = new AssignCommand(line, lhs, rhs);            
-        }
-
-
-        if (current.type == TokenType.ASSIGN) {
-            advance();
-            procExpr();
-            eat(TokenType.COLON);
-            procExpr();
-            if (current.type == TokenType.COLON) {
-                advance();
-                procExpr();
-            }
-        } else {
-            if (current.type == TokenType.COLON) {
-                advance();
-                procName();
-            }
-            eat(TokenType.IN);
-            procExpr();
-        }
-
-        eat(TokenType.DO);
-        procCode();
-        eat(TokenType.END);
+        // IMPLEMENTAR
     }
 
     // <print> ::= print '(' [ <expr> ] ')'
@@ -544,27 +514,52 @@ public class SyntaticAnalysis {
     // <table> ::= '{' [ <elem> { ',' <elem> } ] '}'
     private Expr procTable() {
         eat(TokenType.OPEN_CUR);
-        // CHECAR
-        if (current.type == TokenType.OPEN_BRA) {
-            procElem();
-            while (current.type == TokenType.COLON) {
+        
+        TableExpr texpr = new TableExpr(lex.getLine());
+
+        if (current.type == TokenType.OPEN_BRA || 
+            current.type == TokenType.OPEN_PAR ||
+            current.type == TokenType.SUB ||
+            current.type == TokenType.SIZE ||
+            current.type == TokenType.NOT ||
+            current.type == TokenType.NUMBER ||
+            current.type == TokenType.STRING ||
+            current.type == TokenType.FALSE ||
+            current.type == TokenType.TRUE ||
+            current.type == TokenType.NIL ||
+            current.type == TokenType.READ ||
+            current.type == TokenType.TONUMBER ||
+            current.type == TokenType.TOSTRING ||
+            current.type == TokenType.OPEN_CUR ||
+            current.type == TokenType.ID){
+            TableEntry te = procElem();
+            texpr.addEntry(te);
+            while (current.type == TokenType.COLON){
                 advance();
-                procElem();
+                te = procElem();
+                texpr.addEntry(te);
             }
         }
+
         eat(TokenType.CLOSE_CUR);
-        return null;
+
+        return texpr;
     }
 
     // <elem> ::= [ '[' <expr> ']' '=' ] <expr>
-    private void procElem() {
+    private TableEntry procElem() {
+        TableEntry te = new TableEntry();
         if (current.type == TokenType.OPEN_BRA) {
             advance();
-            procExpr();
+            te.key = procExpr();
             eat(TokenType.CLOSE_BRA);
             eat(TokenType.ASSIGN);
         }
-        procExpr();
+        else {
+            te.key = null;
+        }
+        te.value = procExpr();
+        return te;
     }
 
     private Variable procName() {
