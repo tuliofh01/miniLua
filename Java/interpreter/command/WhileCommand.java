@@ -16,9 +16,11 @@ public class WhileCommand extends Command {
 
     @Override
     public void execute() {
-        Value<?> v;
-        while ((v = expr.expr()) != null && v.eval())
+        Value<?> v = expr.expr();
+        while (v.value() != null && ! v.eval()){
+            System.out.println("d");
             cmds.execute();
+        }
     }
 
 }

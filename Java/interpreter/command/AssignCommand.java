@@ -1,5 +1,6 @@
 package interpreter.command;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import interpreter.expr.Expr;
@@ -19,15 +20,13 @@ public class AssignCommand extends Command {
 
     @Override
     public void execute() {
-        // FIXME: Implementar o resto => (fazer loop para iterar pelos vetores). Atualmente so pega o primeiro rhs e lhs.
-        Expr right = rhs.get(0);
-        
-        // nome var
-        Value<?> v = right.expr();
-
-        SetExpr left = lhs.get(0);
-        // conteudo var
-        left.setValue(v);
+        ArrayList<Value<?>> list = new ArrayList<Value<?>>();
+        for (int index = 0; index < lhs.size(); index++) {
+            Expr right = rhs.get(index);
+            list.add(right.expr());
+            SetExpr left = lhs.get(index);
+            left.setValue(list.get(index));
+        }
     }
 
 }
