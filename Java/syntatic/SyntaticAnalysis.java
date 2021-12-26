@@ -141,6 +141,13 @@ public class SyntaticAnalysis {
                 thenCmds = procCode();
                 ic = new IfCommand(lex.getLine(), expr, thenCmds);
             }
+            if(current.type == TokenType.ELSEIF && (Boolean) expr.expr().value() == true){
+                while ( true ){
+                    advance();
+                    if (current.type == TokenType.END || current.type == TokenType.ELSE)
+                        break;
+                }
+            }
             // Run else
             if (current.type == TokenType.ELSE){
                 advance();
