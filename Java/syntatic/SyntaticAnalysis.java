@@ -1,7 +1,5 @@
 package syntatic;
 
-// IMPORTAR PACOTES PARA COMPILAR!!!
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -46,7 +44,7 @@ public class SyntaticAnalysis {
         BlocksCommand cmds = procCode();
         eat(TokenType.END_OF_FILE);
 
-        return cmds;//
+        return cmds;
     }
 
     private void advance() {
@@ -172,7 +170,6 @@ public class SyntaticAnalysis {
 
     // <repeat> ::= repeat <code> until <expr>
     private RepeatCommand procRepeat() {
-
         int line = lex.getLine();
         Expr expr = null;
 
@@ -419,7 +416,11 @@ public class SyntaticAnalysis {
         while (current.type == TokenType.DOT || current.type == TokenType.OPEN_BRA) {
             if (current.type == TokenType.DOT) {
                 advance();
-                procName();
+                Variable index = procName();
+                StringValue sv = new StringValue(index.getName());
+                Expr expr = new ConstExpr(lex.getLine(), sv);
+                AccessExpr fe = new AccessExpr(lex.getLine(), var, expr);
+                return fe;
             } else {
                 advance();
                 Expr index = procExpr();
