@@ -124,7 +124,7 @@ public class BinaryExpr extends Expr {
     }
 
     private Value<?> notEqualOp() {
-        if (!right.expr().value().equals(left.expr().value())) {
+        if (!(right.expr().value().equals(left.expr().value()))) {
             BooleanValue fv = new BooleanValue(true);
             return fv;
         } else {

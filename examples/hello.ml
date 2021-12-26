@@ -1,6 +1,3 @@
-a = read()
-
-
-if tonumber(a) >= 1 then
-    print(0)
-end
+a = tostring(0)
+print(a)
+print(a == "0.0")
