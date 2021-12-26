@@ -155,6 +155,18 @@ public class SyntaticAnalysis {
                 ic.setElseCommands(elseCmds);
             }
         }
+        if(current.type == TokenType.ELSEIF && (Boolean) expr.expr().value() == true){
+            while ( true ){
+                advance();
+                if (current.type == TokenType.END || current.type == TokenType.ELSE)
+                    break;
+            }
+        }
+        if (current.type == TokenType.ELSE){
+            advance();
+            Command elseCmds = procCode();
+            ic.setElseCommands(elseCmds);
+        }
         eat(TokenType.END);
         return ic;
     }
