@@ -32,7 +32,7 @@ public class IfCommand extends Command {
             thenCmds.execute();
         }
 
-        if(elseCmds != null){
+        if(elseCmds != null && v.eval() == false){
             elseCmds.execute();
         }
 

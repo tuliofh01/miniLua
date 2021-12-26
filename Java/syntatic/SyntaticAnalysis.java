@@ -127,31 +127,28 @@ public class SyntaticAnalysis {
     // <if> ::= if <expr> then <code> { elseif <expr> then <code> } [ else <code> ]
     // end
     private IfCommand procIf() {
-        Expr expr = null; Command thenCmds = null;
-
+        Expr expr = null; Command thenCmds = null; IfCommand ic = null;
         eat(TokenType.IF);
         expr = procExpr();
         eat(TokenType.THEN);
         thenCmds = procCode();
-
-        // Won't run unless previous ifs fail
-        while (current.type == TokenType.ELSEIF) {
-            advance();
-            expr = procExpr();
-            eat(TokenType.THEN);
-            thenCmds = procCode();
+        ic = new IfCommand(lex.getLine(), expr, thenCmds);
+        if ((Boolean) expr.expr().value() == false){
+            while(current.type == TokenType.ELSEIF && (Boolean) expr.expr().value() == false){
+                advance();
+                expr = procExpr();
+                eat(TokenType.THEN);
+                thenCmds = procCode();
+                ic = new IfCommand(lex.getLine(), expr, thenCmds);
+            }
+            // Run else
+            if (current.type == TokenType.ELSE){
+                advance();
+                Command elseCmds = procCode();
+                ic.setElseCommands(elseCmds);
+            }
         }
-
-        int line = lex.getLine();
-
-        IfCommand ic = new IfCommand(line, expr, thenCmds);
-
-        if (current.type == TokenType.ELSE) {
-            ic.setElseCommands(procCode());
-        }
-
         eat(TokenType.END);
-
         return ic;
     }
 

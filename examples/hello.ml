@@ -1,5 +1,9 @@
-a = {5, 6, 7, ["oi"] = 3}
-
-a.oi = 5
-
-print(a["oi"])
+if 1 == 2 then
+    print(0)
+elseif 2 == 5 then
+    print(10)
+elseif 2 == 2 then
+    print(8)
+else
+    print(1)
+end
