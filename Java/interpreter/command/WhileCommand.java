@@ -18,7 +18,6 @@ public class WhileCommand extends Command {
     public void execute() {
         Value<?> v = expr.expr();
         while (v.value() != null && ! v.eval()){
-            System.out.println("d");
             cmds.execute();
         }
     }
