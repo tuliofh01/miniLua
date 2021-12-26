@@ -187,7 +187,16 @@ public class SyntaticAnalysis {
     // do <code> end
     private void procFor() {
         eat(TokenType.FOR);
-        procName();
+
+        Expr name = procLValue();
+        if (current.type == TokenType.ASSIGN){
+            Vector<SetExpr> lhs = new Vector<SetExpr>(); Vector<Expr> rhs = new Vector<Expr>();
+            lhs.add((SetExpr) name); 
+            Expr value = procExpr(); int line = lex.getLine();
+            rhs.add(value);
+            AssignCommand ac = new AssignCommand(line, lhs, rhs);            
+        }
+
 
         if (current.type == TokenType.ASSIGN) {
             advance();
@@ -454,9 +463,9 @@ public class SyntaticAnalysis {
         Expr expr = null;
         if (current.type == TokenType.READ || current.type == TokenType.TONUMBER
                 || current.type == TokenType.TOSTRING) {
-            procFunction();
+            expr = procFunction();
         } else if (current.type == TokenType.OPEN_CUR) {
-            procTable();
+            expr = procTable();
         } else if (current.type == TokenType.NUMBER || current.type == TokenType.STRING
                 || current.type == TokenType.FALSE || current.type == TokenType.TRUE || current.type == TokenType.NIL) {
 
@@ -493,23 +502,23 @@ public class SyntaticAnalysis {
     }
 
     // <function> ::= (read | tonumber | tostring) '(' [ <expr> ] ')'
-    private Value<?> procFunction() {
-        Expr expr = null;
-        UnaryOp op = null;
-        int line = lex.getLine();
+    private UnaryExpr procFunction() {
+        Expr expr = null; UnaryOp op = null; int line = lex.getLine();
 
         if (current.type == TokenType.READ) {
             op = UnaryOp.Read;
+            advance();
         } else if (current.type == TokenType.TONUMBER) {
             op = UnaryOp.ToNumber;
+            advance();
         } else if (current.type == TokenType.TOSTRING) {
             op = UnaryOp.ToString;
+            advance();
         } else {
             showError();
         }
 
         eat(TokenType.OPEN_PAR);
-
         if (current.type == TokenType.OPEN_PAR ||
                 current.type == TokenType.SUB ||
                 current.type == TokenType.SIZE ||
@@ -526,16 +535,14 @@ public class SyntaticAnalysis {
                 current.type == TokenType.ID) {
             expr = procExpr();
         }
-
-        UnaryExpr ue = new UnaryExpr(line, expr, op);
-
         eat(TokenType.CLOSE_PAR);
 
-        return ue.expr();
+        UnaryExpr ue = new UnaryExpr(line, expr, op);
+        return ue;
     }
 
     // <table> ::= '{' [ <elem> { ',' <elem> } ] '}'
-    private void procTable() {
+    private Expr procTable() {
         eat(TokenType.OPEN_CUR);
         // CHECAR
         if (current.type == TokenType.OPEN_BRA) {
@@ -546,6 +553,7 @@ public class SyntaticAnalysis {
             }
         }
         eat(TokenType.CLOSE_CUR);
+        return null;
     }
 
     // <elem> ::= [ '[' <expr> ']' '=' ] <expr>

@@ -1,9 +1,6 @@
-a = 1
-b = 0
+a = read()
 
 
-if true and false then
-    print(a)
-else
-    print(b)
+if tonumber(a) >= 1 then
+    print(0)
 end

@@ -37,10 +37,12 @@ public class UnaryExpr extends Expr {
                 ret = notOp(v);
                 break;
             case ToNumber:
-                // fix me
+                // test me
+                ret = toNumberOp(v);
                 break;
             case ToString:
-                // fix me
+                // test me
+                ret = toStringOp(v);
                 break;
             case Read:
                 // test me
@@ -110,6 +112,32 @@ public class UnaryExpr extends Expr {
         StringValue sv = new StringValue(tmp);
         scanner.close();
         return sv;
+    }
+
+    private Value<?> toNumberOp(Value<?> v){
+        NumberValue nv = null;
+        if(v.value() instanceof String){
+            String string = (String) v.value();
+            nv = new NumberValue(Double.valueOf(string));
+            
+       }
+       else {
+            Utils.abort(super.getLine());
+       } 
+        return nv;
+    }
+
+    private Value<?> toStringOp(Value<?> v){
+        StringValue nv = null;
+        if(v.value() instanceof Double){
+            Double number = (Double) v.value();
+            String string = Double.toString(number);
+            nv = new StringValue(string);
+       }
+       else {
+            Utils.abort(super.getLine());
+       } 
+        return nv;
     }
 
 }
