@@ -13,8 +13,9 @@ repeat
   v = read("Proximo elemento:")
   if v ~= "" then
     exp[#exp+1] = v
+    print(exp)
   end
-until v == ""
+until v == "d"
 
 print("Operacoes:")
 res = exp[1]

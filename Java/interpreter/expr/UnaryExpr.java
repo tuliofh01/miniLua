@@ -106,7 +106,6 @@ public class UnaryExpr extends Expr {
         Scanner scanner = new Scanner(System.in);
         String tmp = scanner.next().trim();
         StringValue sv = new StringValue(tmp);
-        scanner.close();
         return sv;
     }
 

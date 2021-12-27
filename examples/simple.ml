@@ -1,4 +1,3 @@
-a = ""
-if a ~= "z" then
-    print(a ~= "s")
-end
+a = {}
+a[#a+1] = read(">>>")
+print(a)

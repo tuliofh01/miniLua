@@ -135,8 +135,9 @@ public class SyntaticAnalysis {
         eat(TokenType.THEN);
         thenCmds = procCode();
         ic = new IfCommand(lex.getLine(), expr, thenCmds);
-        if ((Boolean) expr.expr().value() == false){
-            while(current.type == TokenType.ELSEIF && (Boolean) expr.expr().value() == false){
+        
+        if (expr.expr() == null || (Boolean) expr.expr().eval() == false){
+            while(current.type == TokenType.ELSEIF && (expr.expr() == null || (Boolean) expr.expr().eval() == false)){
                 advance();
                 expr = procExpr();
                 eat(TokenType.THEN);
