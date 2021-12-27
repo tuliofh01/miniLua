@@ -231,6 +231,7 @@ public class LexicalAnalysis implements AutoCloseable {
                 case 14:
                     if (c == '"') {
                         // lex.token += (char) c;
+                        lex.type = TokenType.STRING;
                         state = 18;
                     } else if (c == -1) {
                         lex.token = "";
