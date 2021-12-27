@@ -23,6 +23,9 @@ for i=2,#exp-1,2 do
   next = tonumber(exp[i+1]) or 0
   if op then
     if op == "add" then
+      print(0)
+      print(res)
+      print(next)
       tmp = res + next
     elseif op == "sub" then
       tmp = res - next
