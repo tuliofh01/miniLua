@@ -26,7 +26,6 @@ for i=2, #exp-1, 2 do
   if op then
     
     if op == "add" then
-      print(12345)
       tmp = res + next
     elseif op == "sub" then
       tmp = res - next

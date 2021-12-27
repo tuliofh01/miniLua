@@ -1,5 +1,2 @@
-b = 99
-
-for a = 0, b, b do
-    print(a)
-end
+a = 1 + "5"
+print(a)
