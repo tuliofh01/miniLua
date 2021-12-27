@@ -1,7 +1,5 @@
 package interpreter.expr;
 
-import java.util.HashMap;
-
 import interpreter.value.Value;
 
 public abstract class Expr {

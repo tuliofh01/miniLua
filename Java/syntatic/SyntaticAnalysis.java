@@ -7,6 +7,7 @@ import java.util.Vector;
 import interpreter.command.AssignCommand;
 import interpreter.command.BlocksCommand;
 import interpreter.command.Command;
+import interpreter.command.GenericForCommand;
 import interpreter.command.IfCommand;
 import interpreter.command.PrintCommand;
 import interpreter.command.RepeatCommand;
@@ -201,8 +202,22 @@ public class SyntaticAnalysis {
 
     // for <name> (('=' <expr> ',' <expr> [',' <expr>]) | ([',' <name>] in <expr>))
     // do <code> end
-    private void procFor() {
+    private Command procFor() {
         // IMPLEMENTAR
+        eat(TokenType.FOR);
+        Variable var1 = procName();
+        System.out.println("name");
+        eat(TokenType.IN);
+        Expr expr = procExpr();
+        System.out.println("expr");
+        eat(TokenType.DO);
+        Command cmds = procCode();
+        System.out.println("code");
+        eat(TokenType.END);
+
+        GenericForCommand gfc = new GenericForCommand(lex.getLine(), var1, null, expr, cmds);
+        System.out.println("constructor");
+        return gfc;
     }
 
     // <print> ::= print '(' [ <expr> ] ')'
