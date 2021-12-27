@@ -9,6 +9,7 @@ import interpreter.command.BlocksCommand;
 import interpreter.command.Command;
 import interpreter.command.GenericForCommand;
 import interpreter.command.IfCommand;
+import interpreter.command.NumericForCommand;
 import interpreter.command.PrintCommand;
 import interpreter.command.RepeatCommand;
 import interpreter.command.WhileCommand;
@@ -205,7 +206,7 @@ public class SyntaticAnalysis {
     private Command procFor() {
         
         Variable var1, var2 = null;
-        Expr expr1, expr2, exp3; 
+        Expr expr1, expr2, expr3; 
         Command cmds, forCommand = null;
         int line = lex.getLine();
 
@@ -229,7 +230,21 @@ public class SyntaticAnalysis {
 
         // Numeric for
         if(current.type == TokenType.ASSIGN){
-            
+            advance();
+            expr1 = procExpr();
+            eat(TokenType.COLON);
+            expr2 = procExpr();
+            if(current.type == TokenType.COLON){
+                advance();
+                expr3 = procExpr();
+            }
+            else{
+                expr3 = null;
+            }
+            eat(TokenType.DO);
+            cmds = procCode();
+            eat(TokenType.END);
+            forCommand = new NumericForCommand(line, var1, expr1, expr2, expr3, cmds);
         }
 
 		return forCommand;
