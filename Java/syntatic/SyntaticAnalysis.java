@@ -129,48 +129,38 @@ public class SyntaticAnalysis {
     // <if> ::= if <expr> then <code> { elseif <expr> then <code> } [ else <code> ]
     // end
     private IfCommand procIf() {
-        Expr expr = null; Command thenCmds = null; IfCommand ic = null;
+        Expr expr; Command ifcmds, elsecmds = null; IfCommand ifCommand;
+
         eat(TokenType.IF);
         expr = procExpr();
+        System.out.println(expr.expr().value());
         eat(TokenType.THEN);
-        thenCmds = procCode();
-        ic = new IfCommand(lex.getLine(), expr, thenCmds);
-        if ((Boolean) expr.expr().value() == false){
-            while(current.type == TokenType.ELSEIF && (Boolean) expr.expr().value() == false){
+        ifcmds = procCode();
+
+        if (expr.expr().eval() == false){
+            while (current.type == TokenType.ELSEIF && expr.expr().eval() == false){
                 advance();
                 expr = procExpr();
                 eat(TokenType.THEN);
-                thenCmds = procCode();
-                ic = new IfCommand(lex.getLine(), expr, thenCmds);
+                ifcmds = procCode();
             }
-            if(current.type == TokenType.ELSEIF && (Boolean) expr.expr().value() == true){
-                while ( true ){
-                    advance();
-                    if (current.type == TokenType.END || current.type == TokenType.ELSE)
-                        break;
-                }
-            }
-            // Run else
-            if (current.type == TokenType.ELSE){
+            if(current.type == TokenType.ELSE){
                 advance();
-                Command elseCmds = procCode();
-                ic.setElseCommands(elseCmds);
+                elsecmds = procCode();
             }
+            eat(TokenType.END);
         }
-        if(current.type == TokenType.ELSEIF && (Boolean) expr.expr().value() == true){
-            while ( true ){
+        else{
+            while (current.type != TokenType.END){
                 advance();
-                if (current.type == TokenType.END || current.type == TokenType.ELSE)
-                    break;
             }
+            eat(TokenType.END);
         }
-        if (current.type == TokenType.ELSE){
-            advance();
-            Command elseCmds = procCode();
-            ic.setElseCommands(elseCmds);
-        }
-        eat(TokenType.END);
-        return ic;
+
+        ifCommand = new IfCommand(lex.getLine(), expr, ifcmds);
+        ifCommand.setElseCommands(elsecmds);
+
+        return ifCommand;
     }
 
     // <while> ::= while <expr> do <code> end

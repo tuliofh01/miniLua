@@ -28,7 +28,7 @@ public class IfCommand extends Command {
 
         Value<?> v = expr.expr();
 
-        if(v.eval() == true){
+        if(v != null && v.eval() == true){
             thenCmds.execute();
         }
 

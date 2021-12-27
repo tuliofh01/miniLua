@@ -114,22 +114,32 @@ public class BinaryExpr extends Expr {
     }
 
     private Value<?> equalOp() {
+        if (right.expr() == null){
+            right = new ConstExpr(super.getLine(), new BooleanValue(false));
+        }
+        if (left.expr() == null){
+            left = new ConstExpr(super.getLine(), new BooleanValue(false));
+        }
+
         if (right.expr().value().equals(left.expr().value())) {
-            BooleanValue fv = new BooleanValue(true);
-            return fv;
+            return new BooleanValue(true);
         } else {
-            BooleanValue fv = new BooleanValue(false);
-            return fv;
+            return new BooleanValue(false);
         }
     }
 
     private Value<?> notEqualOp() {
-        if (!(right.expr().value().equals(left.expr().value()))) {
-            BooleanValue fv = new BooleanValue(true);
-            return fv;
+        if (right.expr() == null){
+            right = new ConstExpr(super.getLine(), new BooleanValue(false));
+        }
+        if (left.expr() == null){
+            left = new ConstExpr(super.getLine(), new BooleanValue(false));
+        }
+
+        if (! right.expr().value().equals(left.expr().value())) {
+            return new BooleanValue(true);
         } else {
-            BooleanValue fv = new BooleanValue(false);
-            return fv;
+            return new BooleanValue(false);
         }
     }
 
