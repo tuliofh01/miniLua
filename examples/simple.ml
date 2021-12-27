@@ -1,2 +1,4 @@
-a = 1
-print(a == "")
+a = ""
+if a ~= "z" then
+    print(a ~= "s")
+end

@@ -114,23 +114,39 @@ public class BinaryExpr extends Expr {
     }
 
     private Value<?> equalOp() {
-        if (right.expr().value().equals(left.expr().value())) {
-            BooleanValue fv = new BooleanValue(true);
-            return fv;
-        } else {
-            BooleanValue fv = new BooleanValue(false);
-            return fv;
+        if(right.expr() == null || left.expr() == null){
+            if(right.expr()== null && left.expr() == null)
+                return new BooleanValue(true);
+            else
+                return new BooleanValue(false);
         }
+        else{
+            if ((right.expr().value().equals(left.expr().value()))) {
+                BooleanValue fv = new BooleanValue(true);
+                return fv;
+            } else {
+                BooleanValue fv = new BooleanValue(false);
+                return fv;
+            }
+        }   
     }
 
     private Value<?> notEqualOp() {
-        if (!(right.expr().value().equals(left.expr().value()))) {
-            BooleanValue fv = new BooleanValue(true);
-            return fv;
-        } else {
-            BooleanValue fv = new BooleanValue(false);
-            return fv;
+        if(right.expr() == null || left.expr() == null){
+            if(right.expr()== null && left.expr() == null)
+                return new BooleanValue(true);
+            else
+                return new BooleanValue(false);
         }
+        else{
+            if (!(right.expr().value().equals(left.expr().value()))) {
+                BooleanValue fv = new BooleanValue(true);
+                return fv;
+            } else {
+                BooleanValue fv = new BooleanValue(false);
+                return fv;
+            }
+        }   
     }
 
     private Value<?> lowerThanOp() {
