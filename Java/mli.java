@@ -34,6 +34,7 @@ public class mli {
 
         } catch (Exception e) {
             System.err.println("Internal error: " + e.getMessage());
+            e.printStackTrace();
         }
 
     }

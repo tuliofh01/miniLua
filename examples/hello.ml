@@ -1,6 +1,4 @@
-a = 1
-
-while a < 3 do
-    a = a + 1
-    print(a)
+a = {5,6,7}
+for b, c in a do
+    print(tostring(b) .. " " .. tostring(c))
 end

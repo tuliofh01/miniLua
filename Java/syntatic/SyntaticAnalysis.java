@@ -111,7 +111,7 @@ public class SyntaticAnalysis {
         } else if (current.type == TokenType.REPEAT) {
             cmd = procRepeat();
         } else if (current.type == TokenType.FOR) {
-            procFor();
+            cmd = procFor();
         } else if (current.type == TokenType.PRINT) {
             cmd = procPrint();
         } else if (current.type == TokenType.ID) {
@@ -203,21 +203,36 @@ public class SyntaticAnalysis {
     // for <name> (('=' <expr> ',' <expr> [',' <expr>]) | ([',' <name>] in <expr>))
     // do <code> end
     private Command procFor() {
-        // IMPLEMENTAR
-        eat(TokenType.FOR);
-        Variable var1 = procName();
-        System.out.println("name");
-        eat(TokenType.IN);
-        Expr expr = procExpr();
-        System.out.println("expr");
-        eat(TokenType.DO);
-        Command cmds = procCode();
-        System.out.println("code");
-        eat(TokenType.END);
+        
+        Variable var1, var2 = null;
+        Expr expr1, expr2, exp3; 
+        Command cmds, forCommand = null;
+        int line = lex.getLine();
 
-        GenericForCommand gfc = new GenericForCommand(lex.getLine(), var1, null, expr, cmds);
-        System.out.println("constructor");
-        return gfc;
+		eat(TokenType.FOR);
+		var1 = procName();
+
+        // Generic for
+        if(current.type == TokenType.COLON){
+            advance();
+            var2 = procName();
+        }
+        if(current.type == TokenType.IN){
+            advance();
+            // Table
+            expr1 = procExpr();
+            eat(TokenType.DO);
+            cmds = procCode();
+            eat(TokenType.END);
+            forCommand = new GenericForCommand(line, var1, var2, expr1, cmds);
+        }
+
+        // Numeric for
+        if(current.type == TokenType.ASSIGN){
+            
+        }
+
+		return forCommand;
     }
 
     // <print> ::= print '(' [ <expr> ] ')'
