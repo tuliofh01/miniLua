@@ -20,11 +20,11 @@ print("Operacoes:")
 
 res = exp[1]
 
-for i=2,#exp-1,2 do
+for i=2, #exp-1, 2 do
   op = ops[exp[i]]
   next = tonumber(exp[i+1]) or 0
   if op then
-    print(1234)
+    
     if op == "add" then
       print(12345)
       tmp = res + next
@@ -34,11 +34,16 @@ for i=2,#exp-1,2 do
       tmp = res * next
     elseif op == "div" then
       tmp = res / next
+    else
+      -- print(op == "add")
+      print(123456)
     end
 
     print(op)
+    
     print(res)
     print(next)
+    
     print(tmp)
 
     print("  " .. op .. "(" .. res .. ", " .. next .. "): " .. tmp)

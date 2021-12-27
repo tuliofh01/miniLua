@@ -114,39 +114,33 @@ public class BinaryExpr extends Expr {
     }
 
     private Value<?> equalOp() {
-        if(right.expr() == null || left.expr() == null){
-            if(right.expr()== null && left.expr() == null)
-                return new BooleanValue(true);
-            else
-                return new BooleanValue(false);
+        if (right.expr() == null){
+            right = new ConstExpr(super.getLine(), new BooleanValue(false));
         }
-        else{
-            if ((right.expr().value().equals(left.expr().value()))) {
-                BooleanValue fv = new BooleanValue(true);
-                return fv;
-            } else {
-                BooleanValue fv = new BooleanValue(false);
-                return fv;
-            }
-        }   
+        if (left.expr() == null){
+            left = new ConstExpr(super.getLine(), new BooleanValue(false));
+        }
+
+        if (right.expr().value().equals(left.expr().value())) {
+            return new BooleanValue(true);
+        } else {
+            return new BooleanValue(false);
+        }
     }
 
     private Value<?> notEqualOp() {
-        if(right.expr() == null || left.expr() == null){
-            if(right.expr()== null && left.expr() == null)
-                return new BooleanValue(true);
-            else
-                return new BooleanValue(false);
+        if (right.expr() == null){
+            right = new ConstExpr(super.getLine(), new BooleanValue(false));
         }
-        else{
-            if (!(right.expr().value().equals(left.expr().value()))) {
-                BooleanValue fv = new BooleanValue(true);
-                return fv;
-            } else {
-                BooleanValue fv = new BooleanValue(false);
-                return fv;
-            }
-        }   
+        if (left.expr() == null){
+            left = new ConstExpr(super.getLine(), new BooleanValue(false));
+        }
+
+        if (! right.expr().value().equals(left.expr().value())) {
+            return new BooleanValue(true);
+        } else {
+            return new BooleanValue(false);
+        }
     }
 
     private Value<?> lowerThanOp() {
