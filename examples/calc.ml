@@ -13,17 +13,20 @@ repeat
   v = read("Proximo elemento:")
   if v ~= "" then
     exp[#exp+1] = v
-    print(exp)
   end
-until v == "d"
+until v == ""
 
 print("Operacoes:")
+
 res = exp[1]
+
 for i=2,#exp-1,2 do
   op = ops[exp[i]]
   next = tonumber(exp[i+1]) or 0
   if op then
+    print(1234)
     if op == "add" then
+      print(12345)
       tmp = res + next
     elseif op == "sub" then
       tmp = res - next
@@ -32,6 +35,11 @@ for i=2,#exp-1,2 do
     elseif op == "div" then
       tmp = res / next
     end
+
+    print(op)
+    print(res)
+    print(next)
+    print(tmp)
 
     print("  " .. op .. "(" .. res .. ", " .. next .. "): " .. tmp)
     res = tmp
