@@ -1,4 +1,4 @@
 # miniLua
-Interpretador de Lua simplificado para a disciplina de LP
+Interpretador de Lua simplificado para a disciplina de LP.
 
-## TODO > DEBUG
+## Alunos: Túlio Horta e Henrique Cristófano.
